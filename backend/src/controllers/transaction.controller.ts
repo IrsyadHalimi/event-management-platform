@@ -16,7 +16,11 @@ import {
   uploadPaymentProofService,
   acceptTransactionService,
   rejectTransactionService,
-  getMyTransactionsService
+  getMyTransactionsService,
+  getOrganizerTransactionsService,
+  getOrganizerStatisticsService,
+  getMonthlyRevenueService,
+  getDailyRevenueService
 } from "../services/transaction.service";
 
 export const createTransaction =
@@ -158,6 +162,96 @@ export const getMyTransactions =
         isEmpty:
           transactions.length ===
           0
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const getOrganizerTransactions =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const transactions =
+        await getOrganizerTransactionsService(
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        data:
+          transactions,
+
+        isEmpty:
+          transactions.length ===
+          0
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const getOrganizerStatistics =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const statistics =
+        await getOrganizerStatisticsService(
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        data:
+          statistics
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const getMonthlyRevenue =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const revenue =
+        await getMonthlyRevenueService(
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        data: revenue
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const getDailyRevenue =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const revenue =
+        await getDailyRevenueService(
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        data: revenue
       });
     } catch (error) {
       next(error);

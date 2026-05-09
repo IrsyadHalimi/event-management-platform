@@ -5,7 +5,11 @@ import {
   uploadPaymentProof,
   acceptTransaction,
   rejectTransaction,
-  getMyTransactions
+  getMyTransactions,
+  getOrganizerTransactions,
+  getOrganizerStatistics,
+  getMonthlyRevenue,
+  getDailyRevenue
 } from "../controllers/transaction.controller";
 
 import {
@@ -82,6 +86,54 @@ router.get(
   ]),
 
   getMyTransactions
+);
+
+router.get(
+  "/organizer/all",
+
+  authMiddleware,
+
+  roleMiddleware([
+    "ORGANIZER"
+  ]),
+
+  getOrganizerTransactions
+);
+
+router.get(
+  "/organizer/statistics",
+
+  authMiddleware,
+
+  roleMiddleware([
+    "ORGANIZER"
+  ]),
+
+  getOrganizerStatistics
+);
+
+router.get(
+  "/organizer/monthly-revenue",
+
+  authMiddleware,
+
+  roleMiddleware([
+    "ORGANIZER"
+  ]),
+
+  getMonthlyRevenue
+);
+
+router.get(
+  "/organizer/daily-revenue",
+
+  authMiddleware,
+
+  roleMiddleware([
+    "ORGANIZER"
+  ]),
+
+  getDailyRevenue
 );
 
 export default router;

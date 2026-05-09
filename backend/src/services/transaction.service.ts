@@ -7,7 +7,11 @@ import {
   restoreSeatRepo,
   findUserTransactionsRepo,
   findTransactionByIdRepo,
-  updateTransactionRepo
+  updateTransactionRepo,
+  findOrganizerTransactionsRepo,
+  organizerStatisticsRepo,
+  monthlyRevenueRepo, 
+  dailyRevenueRepo
 } from "../repositories/transaction.repository";
 
 export const createTransactionService =
@@ -221,5 +225,41 @@ export const getMyTransactionsService =
   ) => {
     return findUserTransactionsRepo(
       userId
+    );
+  };
+
+export const getOrganizerTransactionsService =
+  async (
+    organizerId: string
+  ) => {
+    return findOrganizerTransactionsRepo(
+      organizerId
+    );
+  };
+
+export const getOrganizerStatisticsService =
+  async (
+    organizerId: string
+  ) => {
+    return organizerStatisticsRepo(
+      organizerId
+    );
+  };
+
+export const getMonthlyRevenueService =
+  async (
+    organizerId: string
+  ) => {
+    return monthlyRevenueRepo(
+      organizerId
+    );
+  };
+
+export const getDailyRevenueService =
+  async (
+    organizerId: string
+  ) => {
+    return dailyRevenueRepo(
+      organizerId
     );
   };
