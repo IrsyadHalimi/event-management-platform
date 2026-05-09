@@ -22,18 +22,29 @@ enum TransactionStatus {
 }
 
 model User {
-  id              String   @id @default(cuid())
-  name            String
-  email           String   @unique
-  password        String
-  role            Role
-  profilePicture  String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                String   @id @default(cuid())
 
-  events          Event[]
+  name              String
 
-  transactions    Transaction[]
+  email             String   @unique
+
+  password          String
+
+  role              Role
+
+  profilePicture    String?
+
+  resetPasswordToken String?
+
+  resetPasswordExpired DateTime?
+
+  createdAt         DateTime @default(now())
+
+  updatedAt         DateTime @updatedAt
+
+  events            Event[]
+
+  transactions      Transaction[]
 }
 
 model Event {

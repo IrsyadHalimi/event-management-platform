@@ -8,6 +8,8 @@ import eventRoute from "./event.route";
 
 import transactionRoute from "./transaction.route";
 
+import userRoute from "./user.route";
+
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -36,6 +38,11 @@ router.use(
 router.use(
   "/transactions",
   transactionRoute
+);
+
+router.use(
+  "/users",
+  userRoute
 );
 
 export default router;
