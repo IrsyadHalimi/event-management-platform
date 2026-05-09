@@ -1,12 +1,20 @@
 import { Router } from "express";
 
+import authRoute from "./auth.route";
+
 const router = Router();
 
 router.get("/", (req, res) => {
   return res.json({
     success: true,
-    message: "Event Management API Running"
+    message:
+      "Event Management API Running"
   });
 });
+
+router.use(
+  "/auth",
+  authRoute
+);
 
 export default router;

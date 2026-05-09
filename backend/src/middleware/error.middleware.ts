@@ -1,4 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import {
+  Request,
+  Response,
+  NextFunction
+} from "express";
+
+import { ZodError } from "zod";
 
 export const errorMiddleware = (
   error: any,
@@ -8,8 +14,19 @@ export const errorMiddleware = (
 ) => {
   console.error(error);
 
+  if (error instanceof ZodError) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Validation error",
+      errors: error.errors
+    });
+  }
+
   return res.status(500).json({
     success: false,
-    message: "Internal server error"
+    message:
+      error.message ||
+      "Internal server error"
   });
 };
