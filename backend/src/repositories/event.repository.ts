@@ -60,3 +60,50 @@ export const findEventBySlugRepo =
       }
     });
   };
+
+export const findEventByIdRepo =
+  async (id: string) => {
+    return prisma.event.findUnique({
+      where: {
+        id
+      }
+    });
+  };
+
+export const updateEventRepo =
+  async (
+    id: string,
+    data: any
+  ) => {
+    return prisma.event.update({
+      where: {
+        id
+      },
+
+      data
+    });
+  };
+
+export const deleteEventRepo =
+  async (id: string) => {
+    return prisma.event.delete({
+      where: {
+        id
+      }
+    });
+  };
+
+export const findOrganizerEventsRepo =
+  async (
+    organizerId: string
+  ) => {
+    return prisma.event.findMany({
+      where: {
+        organizerId
+      },
+
+      orderBy: {
+        createdAt: "desc"
+      }
+    });
+  };

@@ -3,7 +3,10 @@ import { Router } from "express";
 import {
   createEvent,
   getEvents,
-  getEventDetail
+  getEventDetail,
+  updateEvent,
+  deleteEvent,
+  getOrganizerEvents
 } from "../controllers/event.controller";
 
 import {
@@ -19,6 +22,17 @@ const router = Router();
 router.get("/", getEvents);
 
 router.get(
+  "/my-events",
+  authMiddleware,
+
+  roleMiddleware([
+    "ORGANIZER"
+  ]),
+
+  getOrganizerEvents
+);
+
+router.get(
   "/:slug",
   getEventDetail
 );
@@ -32,6 +46,28 @@ router.post(
   ]),
 
   createEvent
+);
+
+router.put(
+  "/:id",
+  authMiddleware,
+
+  roleMiddleware([
+    "ORGANIZER"
+  ]),
+
+  updateEvent
+);
+
+router.delete(
+  "/:id",
+  authMiddleware,
+
+  roleMiddleware([
+    "ORGANIZER"
+  ]),
+
+  deleteEvent
 );
 
 export default router;

@@ -8,15 +8,18 @@ import {
 } from "../interfaces/request.interface";
 
 import {
-  createEventSchema
+  createEventSchema,
+  updateEventSchema
 } from "../validators/event.validator";
 
 import {
   createEventService,
   findEventsService,
-  findEventBySlugService
+  findEventBySlugService,
+  updateEventService,
+  deleteEventService,
+  findOrganizerEventsService
 } from "../services/event.service";
-import { generateSlug } from "../utils/slug";
 
 export const createEvent =
   async (
@@ -63,7 +66,10 @@ export const getEvents =
 
       return res.json({
         success: true,
-        data: events
+        data: events,
+
+        isEmpty:
+          events.length === 0
       });
     } catch (error) {
       next(error);
@@ -77,8 +83,8 @@ export const getEventDetail =
     next: NextFunction
   ) => {
     try {
+        
       const slug = req.params.slug; 
-
       const event =
         await findEventBySlugService(
           slug as string
@@ -87,6 +93,82 @@ export const getEventDetail =
       return res.json({
         success: true,
         data: event
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const updateEvent =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const validatedData =
+        updateEventSchema.parse(
+          req.body
+        );
+
+      const event =
+        await updateEventService(
+          req.params.id as string,
+          validatedData,
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        message:
+          "Event updated",
+        data: event
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const deleteEvent =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      await deleteEventService(
+        req.params.id as string,
+        req.user!.id
+      );
+
+      return res.json({
+        success: true,
+        message:
+          "Event deleted"
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const getOrganizerEvents =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const events =
+        await findOrganizerEventsService(
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        data: events,
+
+        isEmpty:
+          events.length === 0
       });
     } catch (error) {
       next(error);
