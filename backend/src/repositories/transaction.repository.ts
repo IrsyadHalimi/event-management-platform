@@ -100,3 +100,42 @@ export const updateTransactionRepo =
       data
     });
   };
+
+export const findExpiredTransactionsRepo =
+  async () => {
+    return prisma.transaction.findMany({
+      where: {
+        status:
+          "WAITING_FOR_PAYMENT",
+
+        expiredAt: {
+          lte: new Date()
+        }
+      }
+    });
+  };
+
+export const findWaitingAdminTransactionsRepo =
+  async () => {
+    const threeDaysAgo =
+      new Date(
+        Date.now() -
+          3 *
+            24 *
+            60 *
+            60 *
+            1000
+      );
+
+    return prisma.transaction.findMany({
+      where: {
+        status:
+          "WAITING_FOR_ADMIN_CONFIRMATION",
+
+        updatedAt: {
+          lte:
+            threeDaysAgo
+        }
+      }
+    });
+  };
