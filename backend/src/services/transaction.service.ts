@@ -4,7 +4,10 @@ import {
   findEventByIdTransactionRepo,
   createTransactionRepo,
   reduceSeatRepo,
-  findUserTransactionsRepo
+  restoreSeatRepo,
+  findUserTransactionsRepo,
+  findTransactionByIdRepo,
+  updateTransactionRepo
 } from "../repositories/transaction.repository";
 
 export const createTransactionService =
@@ -72,6 +75,142 @@ export const createTransactionService =
         );
 
         return transaction;
+      }
+    );
+  };
+
+export const uploadPaymentProofService =
+  async (
+    transactionId: string,
+    paymentProof: string,
+    userId: string
+  ) => {
+    const transaction =
+      await findTransactionByIdRepo(
+        transactionId
+      );
+
+    if (!transaction) {
+      throw new Error(
+        "Transaction not found"
+      );
+    }
+
+    if (
+      transaction.userId !==
+      userId
+    ) {
+      throw new Error(
+        "Forbidden"
+      );
+    }
+
+    if (
+      transaction.status !==
+      "WAITING_FOR_PAYMENT"
+    ) {
+      throw new Error(
+        "Invalid transaction status"
+      );
+    }
+
+    return prisma.$transaction(
+      async (tx) => {
+        return updateTransactionRepo(
+          tx,
+          transactionId,
+          {
+            paymentProof,
+
+            status:
+              "WAITING_FOR_ADMIN_CONFIRMATION"
+          }
+        );
+      }
+    );
+  };
+
+export const acceptTransactionService =
+  async (
+    transactionId: string,
+    organizerId: string
+  ) => {
+    const transaction =
+      await findTransactionByIdRepo(
+        transactionId
+      );
+
+    if (!transaction) {
+      throw new Error(
+        "Transaction not found"
+      );
+    }
+
+    if (
+      transaction.event
+        .organizerId !==
+      organizerId
+    ) {
+      throw new Error(
+        "Forbidden"
+      );
+    }
+
+    return prisma.$transaction(
+      async (tx) => {
+        return updateTransactionRepo(
+          tx,
+          transactionId,
+          {
+            status: "DONE"
+          }
+        );
+      }
+    );
+  };
+
+export const rejectTransactionService =
+  async (
+    transactionId: string,
+    organizerId: string
+  ) => {
+    const transaction =
+      await findTransactionByIdRepo(
+        transactionId
+      );
+
+    if (!transaction) {
+      throw new Error(
+        "Transaction not found"
+      );
+    }
+
+    if (
+      transaction.event
+        .organizerId !==
+      organizerId
+    ) {
+      throw new Error(
+        "Forbidden"
+      );
+    }
+
+    return prisma.$transaction(
+      async (tx) => {
+        await restoreSeatRepo(
+          tx,
+          transaction.eventId,
+          transaction.quantity
+        );
+
+        return updateTransactionRepo(
+          tx,
+          transactionId,
+          {
+            status:
+              "REJECTED"
+          }
+        );
       }
     );
   };

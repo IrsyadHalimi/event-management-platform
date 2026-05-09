@@ -36,6 +36,26 @@ export const reduceSeatRepo =
     });
   };
 
+export const restoreSeatRepo =
+  async (
+    tx: any,
+    eventId: string,
+    quantity: number
+  ) => {
+    return tx.event.update({
+      where: {
+        id: eventId
+      },
+
+      data: {
+        availableSeats: {
+          increment:
+            quantity
+        }
+      }
+    });
+  };
+
 export const findUserTransactionsRepo =
   async (userId: string) => {
     return prisma.transaction.findMany({
@@ -50,5 +70,33 @@ export const findUserTransactionsRepo =
       orderBy: {
         createdAt: "desc"
       }
+    });
+  };
+
+export const findTransactionByIdRepo =
+  async (id: string) => {
+    return prisma.transaction.findUnique({
+      where: {
+        id
+      },
+
+      include: {
+        event: true
+      }
+    });
+  };
+
+export const updateTransactionRepo =
+  async (
+    tx: any,
+    id: string,
+    data: any
+  ) => {
+    return tx.transaction.update({
+      where: {
+        id
+      },
+
+      data
     });
   };

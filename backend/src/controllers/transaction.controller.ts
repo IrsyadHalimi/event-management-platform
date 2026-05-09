@@ -13,6 +13,9 @@ import {
 
 import {
   createTransactionService,
+  uploadPaymentProofService,
+  acceptTransactionService,
+  rejectTransactionService,
   getMyTransactionsService
 } from "../services/transaction.service";
 
@@ -43,6 +46,93 @@ export const createTransaction =
           data:
             transaction
         });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const uploadPaymentProof =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      if (!req.file) {
+        throw new Error(
+          "Payment proof required"
+        );
+      }
+
+      const transaction =
+        await uploadPaymentProofService(
+          req.params.id as string,
+
+          req.file.filename,
+
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        message:
+          "Payment proof uploaded",
+
+        data:
+          transaction
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const acceptTransaction =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const transaction =
+        await acceptTransactionService(
+          req.params.id as string,
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        message:
+          "Transaction accepted",
+
+        data:
+          transaction
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export const rejectTransaction =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const transaction =
+        await rejectTransactionService(
+          req.params.id as string,
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        message:
+          "Transaction rejected",
+
+        data:
+          transaction
+      });
     } catch (error) {
       next(error);
     }

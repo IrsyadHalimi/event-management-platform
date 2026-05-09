@@ -8,4 +8,6 @@ export interface AuthRequest
     id: string;
     role: Role;
   };
+
+  file?: Express.Multer.File;
 }
