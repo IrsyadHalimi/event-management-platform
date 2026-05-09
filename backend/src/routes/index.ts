@@ -4,6 +4,8 @@ import authRoute from "./auth.route";
 
 import protectedRoute from "./protected.route";
 
+import eventRoute from "./event.route";
+
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -22,6 +24,11 @@ router.use(
 router.use(
   "/protected",
   protectedRoute
+);
+
+router.use(
+  "/events",
+  eventRoute
 );
 
 export default router;
