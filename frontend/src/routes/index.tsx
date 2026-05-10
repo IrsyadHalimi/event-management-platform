@@ -33,6 +33,15 @@ import {
   ProtectedRoute
 } from "./protected-route";
 
+import MyEventsPage
+  from "../pages/dashboard/my-events-page";
+
+import CreateEventPage
+  from "../pages/dashboard/create-event-page";
+
+import OrganizerTransactionsPage
+  from "../pages/dashboard/organizer-transactions-page";
+
 export const AppRoutes =
   () => {
     return (
@@ -91,6 +100,27 @@ export const AppRoutes =
             path="my-transactions"
             element={
               <MyTransactionsPage />
+            }
+          />
+
+          <Route
+            path="my-events"
+            element={
+              <MyEventsPage />
+            }
+          />
+
+          <Route
+            path="create-event"
+            element={
+              <CreateEventPage />
+            }
+          />
+
+          <Route
+            path="organizer-transactions"
+            element={
+              <OrganizerTransactionsPage />
             }
           />
         </Route>
