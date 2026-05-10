@@ -23,6 +23,12 @@ import RegisterPage
 import DashboardPage
   from "../pages/dashboard/dashboard-page";
 
+import EventDetailPage
+  from "../pages/events/event-detail-page";
+
+import MyTransactionsPage
+  from "../pages/dashboard/my-transactions-page";
+
 import {
   ProtectedRoute
 } from "./protected-route";
@@ -40,6 +46,13 @@ export const AppRoutes =
             path="/"
             element={
               <HomePage />
+            }
+          />
+
+          <Route
+            path="/events/:slug"
+            element={
+              <EventDetailPage />
             }
           />
 
@@ -71,6 +84,13 @@ export const AppRoutes =
             index
             element={
               <DashboardPage />
+            }
+          />
+
+          <Route
+            path="my-transactions"
+            element={
+              <MyTransactionsPage />
             }
           />
         </Route>
