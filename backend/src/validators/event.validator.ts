@@ -11,10 +11,10 @@ export const createEventSchema =
 
     location: z.string(),
 
-    price: z.number(),
+    price: z.coerce.number(),
 
     availableSeats:
-      z.number(),
+      z.coerce.number(),
 
     startDate: z.string(),
 

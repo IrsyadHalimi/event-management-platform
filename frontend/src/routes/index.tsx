@@ -48,6 +48,15 @@ import RoleRoute
 import EditEventPage
   from "../pages/dashboard/edit-event-page";
 
+import ProfilePage
+  from "../pages/dashboard/profile-page";
+
+import ForgotPasswordPage
+  from "../pages/auth/forgot-password-page";
+
+import ResetPasswordPage
+  from "../pages/auth/reset-password-page";
+
 export const AppRoutes =
   () => {
     return (
@@ -84,6 +93,20 @@ export const AppRoutes =
               <RegisterPage />
             }
           />
+
+          <Route
+            path="/forgot-password"
+            element={
+              <ForgotPasswordPage />
+            }
+          />
+
+          <Route
+            path="/reset-password/:token"
+            element={
+              <ResetPasswordPage />
+            }
+          />
         </Route>
 
         <Route
@@ -99,6 +122,13 @@ export const AppRoutes =
             index
             element={
               <DashboardPage />
+            }
+          />
+
+          <Route
+            path="profile"
+            element={
+              <ProfilePage />
             }
           />
 

@@ -40,7 +40,7 @@ export const EventCard =
                 ? `http://localhost:5000/uploads/${event.thumbnail}`
                 : "https://placehold.co/600x400"
             }
-            alt={event.name}
+            alt={event.title}
             className="
             w-full
             h-48
@@ -66,7 +66,7 @@ export const EventCard =
                 text-lg
               "
               >
-                {event.name}
+                {event.title}
               </h2>
 
               <Badge>

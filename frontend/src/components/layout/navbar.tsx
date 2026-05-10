@@ -52,9 +52,6 @@ export const Navbar =
             gap-3
           "
           >
-            <Link to="/events">
-              Events
-            </Link>
 
             {token ? (
               <>

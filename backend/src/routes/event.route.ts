@@ -17,6 +17,8 @@ import {
   roleMiddleware
 } from "../middleware/role.middleware";
 
+import { upload } from "../config/multer";
+
 const router = Router();
 
 router.get("/", getEvents);
@@ -40,6 +42,8 @@ router.get(
 router.post(
   "/",
   authMiddleware,
+  
+  upload.single("thumbnail"),
 
   roleMiddleware([
     "ORGANIZER"

@@ -181,6 +181,27 @@ export const Sidebar =
           >
             Profile
           </NavLink>
+          <NavLink
+            to="/"
+            end
+            className={({
+              isActive
+            }) =>
+              `
+              px-3
+              py-2
+              rounded-lg
+              transition
+              ${
+                isActive
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-100"
+              }
+            `
+            }
+          >
+            Home Page
+          </NavLink>
         </div>
       </aside>
     );

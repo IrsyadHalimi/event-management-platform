@@ -40,7 +40,7 @@ export default function CreateEventPage() {
 
   const [form, setForm] =
     useState({
-      name: "",
+      title: "",
 
       category: "",
 
@@ -61,6 +61,8 @@ export default function CreateEventPage() {
     useState<File | null>(
       null
     );
+  
+  const [validationErrors, setValidationErrors] = useState<any[]>([]);
 
   const mutation =
     useMutation({
@@ -77,19 +79,21 @@ export default function CreateEventPage() {
         );
       },
 
-      onError: (
-        error: any
-      ) => {
-        toast.error(
-          error.response?.data
-            ?.message ||
-            "Failed"
-        );
+      onError: (error: any) => {
+        const errorData = error.response?.data;
+        
+        if (errorData?.errors) {
+          setValidationErrors(errorData.errors);
+          toast.error("Please check the form for errors");
+        } else {
+          toast.error(errorData?.message || "Failed");
+        }
       }
     });
 
   const handleSubmit =
     () => {
+      setValidationErrors([]);
       const formData =
         new FormData();
 
@@ -111,10 +115,16 @@ export default function CreateEventPage() {
         );
       }
 
+      console.log(Object.fromEntries(formData.entries()));
+
       mutation.mutate(
         formData
       );
     };
+
+  const getFieldError = (path: string) => {
+    return validationErrors.find((err) => err.path.includes(path))?.message;
+  };
 
   return (
     <Card>
@@ -134,15 +144,18 @@ export default function CreateEventPage() {
         </h1>
 
         <Input
-          placeholder="Event name"
+          placeholder="Event Title"
           onChange={(e) =>
             setForm({
               ...form,
-              name:
+              title:
                 e.target.value
             })
           }
         />
+        {getFieldError("title") && (
+          <p className="text-red-500 text-sm">{getFieldError("title")}</p>
+        )}
 
         <Input
           placeholder="Category"
@@ -154,6 +167,9 @@ export default function CreateEventPage() {
             })
           }
         />
+        {getFieldError("category") && (
+          <p className="text-red-500 text-sm">{getFieldError("category")}</p>
+        )}
 
         <Input
           placeholder="Location"
@@ -165,6 +181,9 @@ export default function CreateEventPage() {
             })
           }
         />
+        {getFieldError("location") && (
+          <p className="text-red-500 text-sm">{getFieldError("location")}</p>
+        )}
 
         <Textarea
           placeholder="Description"
@@ -176,7 +195,9 @@ export default function CreateEventPage() {
             })
           }
         />
-
+        {getFieldError("description") && (
+          <p className="text-red-500 text-sm">{getFieldError("description")}</p>
+        )}
         <Input
           type="number"
           placeholder="Price"
@@ -191,6 +212,9 @@ export default function CreateEventPage() {
             })
           }
         />
+        {getFieldError("price") && (
+          <p className="text-red-500 text-sm">{getFieldError("price")}</p>
+        )}
 
         <Input
           type="number"
@@ -206,7 +230,9 @@ export default function CreateEventPage() {
             })
           }
         />
-
+        {getFieldError("availableSeats") && (
+          <p className="text-red-500 text-sm">{getFieldError("availableSeats")}</p>
+        )}
         <Input
           type="datetime-local"
           onChange={(e) =>
@@ -217,7 +243,9 @@ export default function CreateEventPage() {
             })
           }
         />
-
+        {getFieldError("startDate") && (
+          <p className="text-red-500 text-sm">{getFieldError("startDate")}</p>
+        )}
         <Input
           type="datetime-local"
           onChange={(e) =>
@@ -228,6 +256,9 @@ export default function CreateEventPage() {
             })
           }
         />
+        {getFieldError("endDate") && (
+          <p className="text-red-500 text-sm">{getFieldError("endDate")}</p>
+        )}
 
         <Input
           type="file"
@@ -239,7 +270,9 @@ export default function CreateEventPage() {
             )
           }
         />
-
+        {getFieldError("thumbnail") && (
+          <p className="text-red-500 text-sm">{getFieldError("thumbnail")}</p>
+        )}
         <Button
           onClick={
             handleSubmit

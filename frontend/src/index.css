@@ -30,7 +30,6 @@ body {
   font-family: sans-serif;
   background: #f8fafc;
   margin: 0;
-  display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;

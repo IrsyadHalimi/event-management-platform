@@ -33,9 +33,19 @@ export const createEvent =
           req.body
         );
 
+      let thumbnailPath = "";
+      if (req.file) {
+        thumbnailPath = req.file.path; 
+      }
+
+      const eventData = {
+        ...validatedData,
+        thumbnail: thumbnailPath,
+      };
+
       const event =
         await createEventService(
-          validatedData,
+          eventData,
           req.user!.id
         );
 

@@ -204,6 +204,23 @@ export default function LoginPage() {
                 ? "Loading..."
                 : "Login"}
             </Button>
+
+            <div
+              className="
+              text-right
+              mt-2
+            "
+            >
+              <a
+                href="/forgot-password"
+                className="
+                text-sm
+                text-blue-500
+              "
+              >
+                Forgot password?
+              </a>
+            </div>
           </form>
         </CardContent>
       </Card>
