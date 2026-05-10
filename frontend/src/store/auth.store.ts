@@ -11,6 +11,8 @@ interface User {
   role:
     | "CUSTOMER"
     | "ORGANIZER";
+
+  profilePicture?: string;
 }
 
 interface AuthState {
@@ -25,6 +27,10 @@ interface AuthState {
     user: User
   ) => void;
 
+  setUser: (
+    user: User
+  ) => void;
+  
   logout: () => void;
 }
 
@@ -52,6 +58,13 @@ export const useAuthStore =
           user
         });
       },
+
+      setUser: (
+          user
+        ) =>
+          set({
+            user
+          }),
 
       logout: () => {
         localStorage.removeItem(
