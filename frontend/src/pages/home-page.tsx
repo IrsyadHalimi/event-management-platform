@@ -30,6 +30,10 @@ import {
   Button
 } from "../components/ui/button";
 
+import {
+  EmptyState
+} from "../components/common/empty-state";
+
 export default function HomePage() {
   const [search, setSearch] =
     useState("");
@@ -184,24 +188,32 @@ export default function HomePage() {
         </div>
       ) : (
         <>
-          <div
-            className="
-            grid
-            md:grid-cols-3
-            gap-6
-          "
-          >
-            {data?.data?.map(
-              (event: any) => (
-                <EventCard
-                  key={
-                    event.id
-                  }
-                  event={event}
-                />
-              )
-            )}
-          </div>
+          {data?.data?.length ===
+            0 ? (
+              <EmptyState
+                title="No events found"
+                description="Try changing your search or filter."
+              />
+            ) : (
+              <div
+                className="
+                grid
+                md:grid-cols-3
+                gap-6
+              "
+              >
+              {data?.data?.map(
+                (event: any) => (
+                  <EventCard
+                    key={
+                      event.id
+                    }
+                    event={event}
+                  />
+                )
+              )}
+            </div>
+          )}
 
           <div
             className="

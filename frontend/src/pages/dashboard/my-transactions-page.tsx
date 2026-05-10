@@ -22,8 +22,8 @@ import {
 } from "../../components/common/countdown";
 
 import {
-  Button
-} from "../../components/ui/button";
+  EmptyState
+} from "../../components/common/empty-state";
 
 import { toast }
   from "sonner";
@@ -99,104 +99,112 @@ export default function MyTransactionsPage() {
         My Transactions
       </h1>
 
-      <div
-        className="
-        grid
-        gap-6
-      "
-      >
-        {data?.data?.map(
-          (trx: any) => (
-            <Card
-              key={trx.id}
-            >
-              <CardContent
-                className="
-                p-6
-                flex
-                flex-col
-                md:flex-row
-                md:items-center
-                md:justify-between
-                gap-4
-              "
+      {data?.data?.length ===
+        0 ? (
+          <EmptyState
+            title="No transactions"
+            description="Your purchased tickets will appear here."
+          />
+        ) : (
+          <div
+            className="
+            grid
+            gap-6
+          "
+          >
+          {data?.data?.map(
+            (trx: any) => (
+              <Card
+                key={trx.id}
               >
-                <div>
-                  <h2
-                    className="
-                    text-xl
-                    font-bold
-                  "
-                  >
-                    {
-                      trx.event
-                        .name
-                    }
-                  </h2>
-
-                  <p>
-                    Qty:{" "}
-                    {
-                      trx.quantity
-                    }
-                  </p>
-
-                  <p>
-                    Total:
-                    Rp{" "}
-                    {trx.totalPrice.toLocaleString()}
-                  </p>
-
-                  <div
-                    className="
-                    mt-2
-                  "
-                  >
-                    <StatusBadge
-                      status={
-                        trx.status
+                <CardContent
+                  className="
+                  p-6
+                  flex
+                  flex-col
+                  md:flex-row
+                  md:items-center
+                  md:justify-between
+                  gap-4
+                "
+                >
+                  <div>
+                    <h2
+                      className="
+                      text-xl
+                      font-bold
+                    "
+                    >
+                      {
+                        trx.event
+                          .name
                       }
-                    />
+                    </h2>
+
+                    <p>
+                      Qty:{" "}
+                      {
+                        trx.quantity
+                      }
+                    </p>
+
+                    <p>
+                      Total:
+                      Rp{" "}
+                      {trx.totalPrice.toLocaleString()}
+                    </p>
+
+                    <div
+                      className="
+                      mt-2
+                    "
+                    >
+                      <StatusBadge
+                        status={
+                          trx.status
+                        }
+                      />
+                    </div>
+
+                    {trx.status ===
+                      "WAITING_FOR_PAYMENT" && (
+                      <div
+                        className="
+                        mt-2
+                        text-red-500
+                      "
+                      >
+                        <Countdown
+                          expiredAt={
+                            trx.expiredAt
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {trx.status ===
                     "WAITING_FOR_PAYMENT" && (
-                    <div
-                      className="
-                      mt-2
-                      text-red-500
-                    "
-                    >
-                      <Countdown
-                        expiredAt={
-                          trx.expiredAt
+                    <div>
+                      <input
+                        type="file"
+                        onChange={(
+                          e
+                        ) =>
+                          handleUpload(
+                            e,
+                            trx.id
+                          )
                         }
                       />
                     </div>
                   )}
-                </div>
-
-                {trx.status ===
-                  "WAITING_FOR_PAYMENT" && (
-                  <div>
-                    <input
-                      type="file"
-                      onChange={(
-                        e
-                      ) =>
-                        handleUpload(
-                          e,
-                          trx.id
-                        )
-                      }
-                    />
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )
-        )}
-      </div>
+                </CardContent>
+              </Card>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }

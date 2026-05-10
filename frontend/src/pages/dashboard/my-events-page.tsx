@@ -19,6 +19,14 @@ import {
 import { toast }
   from "sonner";
 
+import {
+  DeleteDialog
+} from "../../components/common/delete-dialog";
+
+import {
+  EmptyState
+} from "../../components/common/empty-state";
+
 export default function MyEventsPage() {
   const { data, refetch } =
     useQuery({
@@ -70,49 +78,46 @@ export default function MyEventsPage() {
         </a>
       </div>
 
-      <div
-        className="
-        grid
-        md:grid-cols-3
-        gap-6
-      "
-      >
-        {data?.data?.map(
-          (event: any) => (
-            <div
-              key={event.id}
-            >
-              <EventCard
-                event={event}
-              />
+      {data?.data?.length ===
+        0 ? (
+          <EmptyState
+            title="No events yet"
+            description="Create your first event to start selling tickets."
+          />
+        ) : (
+          <div
+            className="
+            grid
+            md:grid-cols-3
+            gap-6
+          "
+          >
+          {data?.data?.map(
+            (event: any) => (
+              <div
+                key={event.id}
+              >
+                <EventCard
+                  event={event}
+                />
 
-              <Button
-                variant="destructive"
-                className="
-                mt-2
-                w-full
-              "
-                onClick={() => {
-                  const confirmDelete =
-                    confirm(
-                      "Delete this event?"
-                    );
-
-                  if (
-                    confirmDelete
-                  ) {
+                <DeleteDialog
+                  onConfirm={() =>
                     mutation.mutate(
                       event.id
-                    );
+                    )
                   }
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          )
-        )}
-      </div>
+                  loading={
+                    mutation.isPending
+                  }
+                  title="Delete Event"
+                  description="This event will be permanently deleted."
+                />
+              </div>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }

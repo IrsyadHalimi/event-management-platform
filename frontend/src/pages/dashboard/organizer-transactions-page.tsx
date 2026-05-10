@@ -25,6 +25,10 @@ import {
 import { toast }
   from "sonner";
 
+import {
+  EmptyState
+} from "../../components/common/empty-state";
+
 export default function OrganizerTransactionsPage() {
   const { data, refetch } =
     useQuery({
@@ -76,112 +80,120 @@ export default function OrganizerTransactionsPage() {
         Organizer Transactions
       </h1>
 
-      <div
-        className="
-        grid
-        gap-6
-      "
-      >
-        {data?.data?.map(
-          (trx: any) => (
-            <Card
-              key={trx.id}
-            >
-              <CardContent
-                className="
-                p-6
-                flex
-                flex-col
-                gap-4
-              "
+      {data?.data?.length ===
+        0 ? (
+          <EmptyState
+            title="No transactions yet"
+            description="Customer transactions will appear here."
+          />
+        ) : (
+          <div
+            className="
+            grid
+            gap-6
+          "
+          >
+          {data?.data?.map(
+            (trx: any) => (
+              <Card
+                key={trx.id}
               >
-                <div>
-                  <h2
-                    className="
-                    text-xl
-                    font-bold
-                  "
-                  >
-                    {
-                      trx.event
-                        .name
-                    }
-                  </h2>
-
-                  <p>
-                    Customer:
-                    {" "}
-                    {
-                      trx.user
-                        .name
-                    }
-                  </p>
-
-                  <p>
-                    Total:
-                    Rp{" "}
-                    {trx.totalPrice.toLocaleString()}
-                  </p>
-
-                  <div
-                    className="
-                    mt-2
-                  "
-                  >
-                    <StatusBadge
-                      status={
-                        trx.status
+                <CardContent
+                  className="
+                  p-6
+                  flex
+                  flex-col
+                  gap-4
+                "
+                >
+                  <div>
+                    <h2
+                      className="
+                      text-xl
+                      font-bold
+                    "
+                    >
+                      {
+                        trx.event
+                          .name
                       }
+                    </h2>
+
+                    <p>
+                      Customer:
+                      {" "}
+                      {
+                        trx.user
+                          .name
+                      }
+                    </p>
+
+                    <p>
+                      Total:
+                      Rp{" "}
+                      {trx.totalPrice.toLocaleString()}
+                    </p>
+
+                    <div
+                      className="
+                      mt-2
+                    "
+                    >
+                      <StatusBadge
+                        status={
+                          trx.status
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {trx.paymentProof && (
+                    <img
+                      src={`http://localhost:5000/uploads/${trx.paymentProof}`}
+                      alt="proof"
+                      className="
+                      w-64
+                      rounded-lg
+                    "
                     />
-                  </div>
-                </div>
+                  )}
 
-                {trx.paymentProof && (
-                  <img
-                    src={`http://localhost:5000/uploads/${trx.paymentProof}`}
-                    alt="proof"
-                    className="
-                    w-64
-                    rounded-lg
-                  "
-                  />
-                )}
-
-                {trx.status ===
-                  "WAITING_FOR_ADMIN_CONFIRMATION" && (
-                  <div
-                    className="
-                    flex
-                    gap-3
-                  "
-                  >
-                    <Button
-                      onClick={() =>
-                        acceptMutation.mutate(
-                          trx.id
-                        )
-                      }
+                  {trx.status ===
+                    "WAITING_FOR_ADMIN_CONFIRMATION" && (
+                    <div
+                      className="
+                      flex
+                      gap-3
+                    "
                     >
-                      Accept
-                    </Button>
+                      <Button
+                        onClick={() =>
+                          acceptMutation.mutate(
+                            trx.id
+                          )
+                        }
+                      >
+                        Accept
+                      </Button>
 
-                    <Button
-                      variant="destructive"
-                      onClick={() =>
-                        rejectMutation.mutate(
-                          trx.id
-                        )
-                      }
-                    >
-                      Reject
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )
-        )}
-      </div>
+                      <Button
+                        variant="destructive"
+                        onClick={() =>
+                          rejectMutation.mutate(
+                            trx.id
+                          )
+                        }
+                      >
+                        Reject
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -6,6 +6,10 @@ import {
   useAuthStore
 } from "../../store/auth.store";
 
+import {
+  NavLink
+} from "react-router-dom";
+
 export const Sidebar =
   () => {
     const user =
@@ -41,44 +45,136 @@ export const Sidebar =
           gap-4
         "
         >
-          <Link to="/dashboard">
+          <NavLink
+            to="/dashboard"
+            className={({
+              isActive
+            }) =>
+              `
+              px-3
+              py-2
+              rounded-lg
+              transition
+              ${
+                isActive
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-100"
+              }
+            `
+            }
+          >
             Overview
-          </Link>
+          </NavLink>
 
           {user?.role ===
             "ORGANIZER" && (
             <>
-              <Link
+              <NavLink
                 to="/dashboard/my-events"
+                className={({
+                  isActive
+                }) =>
+                  `
+                  px-3
+                  py-2
+                  rounded-lg
+                  transition
+                  ${
+                    isActive
+                      ? "bg-black text-white"
+                      : "hover:bg-gray-100"
+                  }
+                `
+                }
               >
                 My Events
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/dashboard/create-event"
+                className={({
+                  isActive
+                }) =>
+                  `
+                  px-3
+                  py-2
+                  rounded-lg
+                  transition
+                  ${
+                    isActive
+                      ? "bg-black text-white"
+                      : "hover:bg-gray-100"
+                  }
+                `
+                }
               >
                 Create Event
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/dashboard/organizer-transactions"
+                className={({
+                  isActive
+                }) =>
+                  `
+                  px-3
+                  py-2
+                  rounded-lg
+                  transition
+                  ${
+                    isActive
+                      ? "bg-black text-white"
+                      : "hover:bg-gray-100"
+                  }
+                `
+                }
               >
                 Transactions
-              </Link>
+              </NavLink>
             </>
           )}
 
-          <Link
+          <NavLink
             to="/dashboard/my-transactions"
+            className={({
+              isActive
+            }) =>
+              `
+              px-3
+              py-2
+              rounded-lg
+              transition
+              ${
+                isActive
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-100"
+              }
+            `
+            }
           >
             My Transactions
-          </Link>
+          </NavLink>
 
-          <Link
+          <NavLink
             to="/dashboard/profile"
+            className={({
+              isActive
+            }) =>
+              `
+              px-3
+              py-2
+              rounded-lg
+              transition
+              ${
+                isActive
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-100"
+              }
+            `
+            }
           >
             Profile
-          </Link>
+          </NavLink>
         </div>
       </aside>
     );

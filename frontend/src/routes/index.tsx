@@ -42,6 +42,9 @@ import CreateEventPage
 import OrganizerTransactionsPage
   from "../pages/dashboard/organizer-transactions-page";
 
+import RoleRoute
+  from "./role-route";
+
 export const AppRoutes =
   () => {
     return (
@@ -106,21 +109,39 @@ export const AppRoutes =
           <Route
             path="my-events"
             element={
-              <MyEventsPage />
+              <RoleRoute
+                allowedRoles={[
+                  "ORGANIZER"
+                ]}
+              >
+                <MyEventsPage />
+              </RoleRoute>
             }
           />
 
           <Route
             path="create-event"
             element={
-              <CreateEventPage />
+              <RoleRoute
+                allowedRoles={[
+                  "ORGANIZER"
+                ]}
+              >
+                <CreateEventPage />
+              </RoleRoute>
             }
           />
 
           <Route
             path="organizer-transactions"
             element={
-              <OrganizerTransactionsPage />
+              <RoleRoute
+                allowedRoles={[
+                  "ORGANIZER"
+                ]}
+              >
+                <OrganizerTransactionsPage />
+              </RoleRoute>
             }
           />
         </Route>
