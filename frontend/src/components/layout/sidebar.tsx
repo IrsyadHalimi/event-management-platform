@@ -47,6 +47,7 @@ export const Sidebar =
         >
           <NavLink
             to="/dashboard"
+            end
             className={({
               isActive
             }) =>
@@ -71,6 +72,7 @@ export const Sidebar =
             <>
               <NavLink
                 to="/dashboard/my-events"
+                end
                 className={({
                   isActive
                 }) =>
@@ -92,6 +94,7 @@ export const Sidebar =
 
               <NavLink
                 to="/dashboard/create-event"
+                end
                 className={({
                   isActive
                 }) =>
@@ -113,6 +116,7 @@ export const Sidebar =
 
               <NavLink
                 to="/dashboard/organizer-transactions"
+                end
                 className={({
                   isActive
                 }) =>
@@ -136,6 +140,7 @@ export const Sidebar =
 
           <NavLink
             to="/dashboard/my-transactions"
+            end
             className={({
               isActive
             }) =>
@@ -157,6 +162,7 @@ export const Sidebar =
 
           <NavLink
             to="/dashboard/profile"
+            end
             className={({
               isActive
             }) =>
