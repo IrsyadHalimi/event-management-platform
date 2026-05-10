@@ -39,3 +39,23 @@ export const getEventDetailService =
 
     return response.data;
   };
+
+export const updateEventService =
+  async (
+    id: string,
+    payload: FormData
+  ) => {
+    const response =
+      await api.patch(
+        `/events/${id}`,
+        payload,
+        {
+          headers: {
+            "Content-Type":
+              "multipart/form-data"
+          }
+        }
+      );
+
+    return response.data;
+  };

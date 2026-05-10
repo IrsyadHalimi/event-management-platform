@@ -27,6 +27,10 @@ import {
   EmptyState
 } from "../../components/common/empty-state";
 
+import {
+  Link
+} from "react-router-dom";
+
 export default function MyEventsPage() {
   const { data, refetch } =
     useQuery({
@@ -100,6 +104,19 @@ export default function MyEventsPage() {
                 <EventCard
                   event={event}
                 />
+
+                <Link
+                  to={`/dashboard/edit-event/${event.id}`}
+                >
+                  <Button
+                    className="
+                    w-full
+                    mt-2
+                  "
+                  >
+                    Edit
+                  </Button>
+                </Link>
 
                 <DeleteDialog
                   onConfirm={() =>

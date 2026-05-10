@@ -45,6 +45,9 @@ import OrganizerTransactionsPage
 import RoleRoute
   from "./role-route";
 
+import EditEventPage
+  from "../pages/dashboard/edit-event-page";
+
 export const AppRoutes =
   () => {
     return (
@@ -128,6 +131,19 @@ export const AppRoutes =
                 ]}
               >
                 <CreateEventPage />
+              </RoleRoute>
+            }
+          />
+
+          <Route
+            path="edit-event/:id"
+            element={
+              <RoleRoute
+                allowedRoles={[
+                  "ORGANIZER"
+                ]}
+              >
+                <EditEventPage />
               </RoleRoute>
             }
           />
