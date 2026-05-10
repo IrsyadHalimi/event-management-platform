@@ -1,9 +1,9 @@
+import {
+  AppRoutes
+} from "./routes";
+
 function App() {
-  return (
-    <div>
-      Frontend Ready
-    </div>
-  );
+  return <AppRoutes />;
 }
 
 export default App;

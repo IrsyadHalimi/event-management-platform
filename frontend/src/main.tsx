@@ -13,6 +13,9 @@ import {
   QueryProvider
 } from "./providers/query-provider";
 
+import { Toaster }
+  from "sonner";
+
 ReactDOM.createRoot(
   document.getElementById(
     "root"
@@ -22,6 +25,9 @@ ReactDOM.createRoot(
     <BrowserRouter>
       <QueryProvider>
         <App />
+        <Toaster 
+          richColors 
+        />
       </QueryProvider>
     </BrowserRouter>
   </React.StrictMode>
