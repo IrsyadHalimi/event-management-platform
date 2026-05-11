@@ -28,6 +28,14 @@ import {
 import { toast }
   from "sonner";
 
+import {
+  DeleteDialog
+} from "../../components/common/delete-dialog";
+
+import {
+  cancelTransactionService
+} from "../../services/transaction.service";
+
 export default function MyTransactionsPage() {
   const { data } =
     useQuery({
@@ -61,6 +69,28 @@ export default function MyTransactionsPage() {
       onError: () => {
         toast.error(
           "Upload failed"
+        );
+      }
+    });
+
+  const cancelMutation =
+    useMutation({
+      mutationFn:
+        cancelTransactionService,
+
+      onSuccess: () => {
+        toast.success(
+          "Transaction canceled"
+        );
+      },
+
+      onError: (
+        error: any
+      ) => {
+        toast.error(
+          error.response?.data
+            ?.message ||
+            "Failed"
         );
       }
     });
@@ -195,6 +225,18 @@ export default function MyTransactionsPage() {
                             e,
                             trx.id
                           )
+                        }
+                      />
+                      <DeleteDialog
+                        title="Cancel Transaction"
+                        description="This transaction will be canceled."
+                        onConfirm={() =>
+                          cancelMutation.mutate(
+                            trx.id
+                          )
+                        }
+                        loading={
+                          cancelMutation.isPending
                         }
                       />
                     </div>

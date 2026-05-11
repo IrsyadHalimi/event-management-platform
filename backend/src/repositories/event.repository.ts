@@ -23,18 +23,17 @@ export const findEventsRepo =
           mode: "insensitive"
         },
 
-        category: category
-          ? category
-          : undefined,
-
-        location: location
-          ? location
+        category: category 
+        ? { contains: category, mode: "insensitive" } 
+        : undefined,
+      
+        location: location 
+          ? { contains: location, mode: "insensitive" } 
           : undefined
       },
 
-      skip: (page - 1) * limit,
-
-      take: limit,
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit),
 
       orderBy: {
         createdAt: "desc"
@@ -43,10 +42,10 @@ export const findEventsRepo =
   };
 
 export const findEventBySlugRepo = 
-  async (id: string) => { // ganti nama parameter agar tidak bingung
+  async (id: string) => {
     return prisma.event.findUnique({
       where: {
-        id: id // Cari berdasarkan kolom 'id'
+        id: id
       },
       include: {
         organizer: {

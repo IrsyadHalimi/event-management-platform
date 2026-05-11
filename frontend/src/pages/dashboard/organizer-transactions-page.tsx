@@ -149,7 +149,7 @@ export default function OrganizerTransactionsPage() {
 
                   {trx.paymentProof && (
                     <img
-                      src={`http://localhost:5000/uploads/${trx.paymentProof}`}
+                      src={`http://localhost:5000/uploads/payment-proofs/${trx.paymentProof}`}
                       alt="proof"
                       className="
                       w-64

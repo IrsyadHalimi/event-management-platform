@@ -5,6 +5,7 @@ import {
   uploadPaymentProof,
   acceptTransaction,
   rejectTransaction,
+  cancelTransaction,
   getMyTransactions,
   getOrganizerTransactions,
   getOrganizerStatistics,
@@ -74,6 +75,18 @@ router.patch(
   ]),
 
   rejectTransaction
+);
+
+router.patch(
+  "/:id/cancel",
+
+  authMiddleware,
+
+  roleMiddleware([
+    "CUSTOMER"
+  ]),
+
+  cancelTransaction
 );
 
 router.get(

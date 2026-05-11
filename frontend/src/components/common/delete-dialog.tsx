@@ -38,13 +38,14 @@ export const DeleteDialog =
           asChild
         >
           <Button
-            variant="destructive"
+            variant="secondary"
             className="
             w-full
             mt-2
           "
           >
-            Delete
+            {title ||
+              "Delete"}
           </Button>
         </AlertDialogTrigger>
 

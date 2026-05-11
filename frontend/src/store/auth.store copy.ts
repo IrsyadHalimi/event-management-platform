@@ -40,52 +40,22 @@ export const useAuthStore =
   create<AuthState>()(
     persist(
     (set) => ({
-      token:
-        localStorage.getItem(
-          "token"
-        ),
-
+      token: null, // Biarkan persist yang mengambil dari storage
       user: null,
 
-      setAuth: (
-        token,
-        user
-      ) => {
-        localStorage.setItem(
-          "token",
-          token
-        );
-
-        set({
-          token,
-          user
-        });
+      setAuth: (token, user) => {
+        set({ token, user });
       },
 
-      setUser: (
-          user
-        ) =>
-          set({
-            user
-          }),
+      setUser: (user) => set({ user }),
 
       logout: () => {
-        localStorage.removeItem(
-          "token"
-        );
-
-        localStorage.removeItem(
-          "auth-storage"
-        );
-
-        set({
-          token: null,
-          user: null
-        });
+        set({ token: null, user: null });
       }
-    })
-  , {
+    }),
+    {
       name: 'auth-storage', // Nama key di localStorage
       storage: createJSONStorage(() => localStorage),
-    })
+    }
+  )
   );

@@ -3,8 +3,8 @@ import {
 } from "react";
 
 import {
-  useParams,
-  useNavigate
+  useNavigate,
+  useSearchParams
 } from "react-router-dom";
 
 import {
@@ -32,11 +32,16 @@ import { toast }
   from "sonner";
 
 export default function ResetPasswordPage() {
-  const { token } =
-    useParams();
-
   const navigate =
     useNavigate();
+
+  const [searchParams] =
+    useSearchParams();
+
+  const token =
+    searchParams.get(
+      "token"
+    );
 
   const [password, setPassword] =
     useState("");
@@ -59,12 +64,29 @@ export default function ResetPasswordPage() {
         );
       },
 
-      onError: () => {
+      onError: (
+        error: any
+      ) => {
         toast.error(
-          "Invalid token"
+          error.response?.data
+            ?.message ||
+            "Invalid token"
         );
       }
     });
+
+  const handleSubmit =
+    () => {
+      if (!token) {
+        toast.error(
+          "Token not found"
+        );
+
+        return;
+      }
+
+      mutation.mutate();
+    };
 
   return (
     <div
@@ -73,6 +95,8 @@ export default function ResetPasswordPage() {
       justify-center
       items-center
       min-h-screen
+      bg-gray-50
+      px-4
     "
     >
       <Card
@@ -87,14 +111,30 @@ export default function ResetPasswordPage() {
           space-y-4
         "
         >
-          <h1
+          <div
             className="
-            text-2xl
-            font-bold
+            text-center
+            space-y-2
           "
           >
-            Reset Password
-          </h1>
+            <h1
+              className="
+              text-2xl
+              font-bold
+            "
+            >
+              Reset Password
+            </h1>
+
+            <p
+              className="
+              text-sm
+              text-gray-500
+            "
+            >
+              Enter your new password
+            </p>
+          </div>
 
           <Input
             type="password"
@@ -113,11 +153,16 @@ export default function ResetPasswordPage() {
             className="
             w-full
           "
-            onClick={() =>
-              mutation.mutate()
+            onClick={
+              handleSubmit
+            }
+            disabled={
+              mutation.isPending
             }
           >
-            Reset Password
+            {mutation.isPending
+              ? "Resetting..."
+              : "Reset Password"}
           </Button>
         </CardContent>
       </Card>

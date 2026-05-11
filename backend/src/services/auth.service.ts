@@ -66,9 +66,10 @@ export const loginService = async (
     );
   }
 
+
   const token = generateToken({
     id: user.id,
-    role: user.role
+    role: user.role // <--- Pastikan ini yang dikirim
   });
 
   return {

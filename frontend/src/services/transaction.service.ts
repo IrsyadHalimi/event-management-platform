@@ -47,3 +47,15 @@ export const getMyTransactionsService =
 
     return response.data;
   };
+
+export const cancelTransactionService =
+  async (
+    id: string
+  ) => {
+    const response =
+      await api.patch(
+        `/transactions/${id}/cancel`
+      );
+
+    return response.data;
+  };

@@ -16,6 +16,7 @@ import {
   uploadPaymentProofService,
   acceptTransactionService,
   rejectTransactionService,
+  cancelTransactionService,
   getMyTransactionsService,
   getOrganizerTransactionsService,
   getOrganizerStatisticsService,
@@ -142,6 +143,32 @@ export const rejectTransaction =
     }
   };
 
+export const cancelTransaction =
+  async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const transaction =
+        await cancelTransactionService(
+          req.params.id as string,
+          req.user!.id
+        );
+
+      return res.json({
+        success: true,
+        message:
+          "Transaction canceled",
+
+        data:
+          transaction
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
 export const getMyTransactions =
   async (
     req: AuthRequest,
@@ -257,3 +284,4 @@ export const getDailyRevenue =
       next(error);
     }
   };
+  

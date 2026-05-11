@@ -219,6 +219,60 @@ export const rejectTransactionService =
     );
   };
 
+export const cancelTransactionService =
+  async (
+    transactionId: string,
+    userId: string
+  ) => {
+    const transaction =
+      await findTransactionByIdRepo(
+        transactionId
+      );
+
+    if (!transaction) {
+      throw new Error(
+        "Transaction not found"
+      );
+    }
+
+    if (
+      transaction.status !==
+      "WAITING_FOR_PAYMENT"
+    ) {
+      throw new Error(
+        "Transaction cannot be canceled"
+      );
+    }
+
+    if (
+      transaction.userId !==
+      userId
+    ) {
+      throw new Error(
+        "Forbidden"
+      );
+    }
+
+    return prisma.$transaction(
+      async (tx) => {
+        await restoreSeatRepo(
+          tx,
+          transaction.eventId,
+          transaction.quantity
+        );
+
+        return updateTransactionRepo(
+          tx,
+          transactionId,
+          {
+            status:
+              "CANCELED"
+          }
+        );
+      }
+    );
+  };
+
 export const getMyTransactionsService =
   async (
     userId: string
