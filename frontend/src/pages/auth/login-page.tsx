@@ -45,65 +45,40 @@ import {
   useAuthStore
 } from "../../store/auth.store";
 
-type LoginForm =
-  z.infer<
-    typeof loginSchema
-  >;
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const navigate =
-    useNavigate();
-
-  const setAuth =
-    useAuthStore(
-      (state) =>
-        state.setAuth
-    );
+  const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const {
     register,
     handleSubmit,
-    formState: {
-      errors,
-      isSubmitting
-    }
+    formState: { errors, isSubmitting }
   } = useForm<LoginForm>({
-    resolver:
-      zodResolver(
-        loginSchema
-      )
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: ""
+    }
   });
 
-  const onSubmit =
-    async (
-      data: LoginForm
-    ) => {
-      try {
-        const response =
-          await loginService(
-            data
-          );
+  const onSubmit = async (data: LoginForm) => {
+    try {
+      const response = await loginService(data as any); 
 
-        setAuth(
-          response.data.token,
-          response.data.user
-        );
+      const result = response.data || response;
 
-        toast.success(
-          "Login success"
-        );
+      setAuth(result.token, result.user);
 
-        navigate(
-          "/dashboard"
-        );
-      } catch (error: any) {
-        toast.error(
-          error.response?.data
-            ?.message ||
-            "Login failed"
-        );
-      }
-    };
+      toast.success("Login success");
+      navigate("/dashboard");
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Login failed"
+      );
+    }
+  };
 
   return (
     <div

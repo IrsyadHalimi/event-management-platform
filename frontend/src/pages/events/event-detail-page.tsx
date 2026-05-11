@@ -67,6 +67,7 @@ export default function EventDetailPage() {
         toast.success(
           "Transaction created"
         );
+        window.location.href = "/dashboard/my-transactions";
       },
 
       onError: (
@@ -149,7 +150,7 @@ export default function EventDetailPage() {
             {
               event.availableSeats
             }{" "}
-            seats
+            seats available
           </span>
 
           <div className="flex items-center gap-1 
