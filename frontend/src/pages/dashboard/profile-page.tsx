@@ -207,7 +207,7 @@ export default function ProfilePage() {
             <img
               src={
                 user?.profilePicture
-                  ? `http://localhost:5000/uploads/${user.profilePicture}`
+                  ? `http://localhost:5000/uploads/profilePictures/${user.profilePicture}`
                   : "https://placehold.co/120x120"
               }
               alt="profile"

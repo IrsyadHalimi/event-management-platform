@@ -25,7 +25,7 @@ export const EventCard =
   ({ event }: Props) => {
     return (
       <Link
-        to={`/events/${event.slug}`}
+        to={`/events/${event.id}`}
       >
         <Card
           className="
@@ -37,7 +37,7 @@ export const EventCard =
           <img
             src={
               event.thumbnail
-                ? `http://localhost:5000/uploads/${event.thumbnail}`
+                ? `http://localhost:5000/uploads/events/${event.thumbnail}`
                 : "https://placehold.co/600x400"
             }
             alt={event.title}

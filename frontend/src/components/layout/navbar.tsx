@@ -35,15 +35,27 @@ export const Navbar =
           justify-between
         "
         >
-          <Link
-            to="/"
-            className="
-              font-bold
-              text-xl
-            "
-          >
-            Eventify
-          </Link>
+          <div className="">
+            
+            <Link
+              to="/"
+              className="
+                font-bold
+                text-xl
+                flex items-center gap-2
+              "
+            >
+            <img
+              src="/ticket.svg"
+              alt="Eventify Logo"
+              className="
+                h-8
+                w-auto
+              "
+            />
+              Eventify
+            </Link>
+          </div>
 
           <div
             className="

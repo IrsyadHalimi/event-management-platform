@@ -42,13 +42,12 @@ export const findEventsRepo =
     });
   };
 
-export const findEventBySlugRepo =
-  async (slug: string) => {
+export const findEventBySlugRepo = 
+  async (id: string) => { // ganti nama parameter agar tidak bingung
     return prisma.event.findUnique({
       where: {
-        slug
+        id: id // Cari berdasarkan kolom 'id'
       },
-
       include: {
         organizer: {
           select: {

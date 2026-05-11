@@ -341,7 +341,7 @@ CANCELED
 ## Payment Proof
 
 ```txt
-src/uploads/payment-proofs
+uploads/payment-proofs
 ```
 
 ---
@@ -349,7 +349,7 @@ src/uploads/payment-proofs
 ## Profile Pictures
 
 ```txt
-src/uploads
+uploads/profilePicture
 ```
 
 ---

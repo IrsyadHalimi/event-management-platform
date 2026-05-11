@@ -4,13 +4,13 @@ import fs from "fs";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let folder = "src/uploads/";
+    let folder = "uploads/";
 
     // Tentukan sub-folder berdasarkan nama field di frontend/route
     if (file.fieldname === "thumbnail") {
       folder += "events";
     } else if (file.fieldname === "profilePicture") {
-      folder += "profiles";
+      folder += "profilePictures";
     } else if (file.fieldname === "paymentProof") {
       folder += "payment-proofs";
     } else {

@@ -45,7 +45,7 @@ export default function EditEventPage() {
   const navigate =
     useNavigate();
 
-  const [name, setName] =
+  const [title, setTitle] =
     useState("");
 
   const [description,
@@ -89,12 +89,13 @@ export default function EditEventPage() {
     });
 
   useEffect(() => {
+    console.log(data);
     if (data?.data) {
       const event =
         data.data;
 
-      setName(
-        event.name
+      setTitle(
+        event.title
       );
 
       setDescription(
@@ -171,8 +172,8 @@ export default function EditEventPage() {
         new FormData();
 
       formData.append(
-        "name",
-        name
+        "title",
+        title
       );
 
       formData.append(
@@ -239,10 +240,10 @@ export default function EditEventPage() {
           </h1>
 
           <Input
-            placeholder="Event name"
-            value={name}
+            placeholder="Event Title"
+            value={title}
             onChange={(e) =>
-              setName(
+              setTitle(
                 e.target.value
               )
             }

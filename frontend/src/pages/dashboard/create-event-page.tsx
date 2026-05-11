@@ -2,6 +2,8 @@ import {
   useState
 } from "react";
 
+import Select from "react-select";
+
 import {
   useMutation
 } from "@tanstack/react-query";
@@ -34,9 +36,29 @@ import {
   useNavigate
 } from "react-router-dom";
 
+import { useQuery } from "@tanstack/react-query";
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
 export default function CreateEventPage() {
   const navigate =
     useNavigate();
+
+  const getLocalISOString = () => {
+    const now = new Date();
+    // Geser waktu sesuai timezone offset menit ke milidetik
+    const tzOffset = now.getTimezoneOffset() * 60000; 
+    const localISOTime = new Date(now.getTime() - tzOffset).toISOString().slice(0, 16);
+    return localISOTime;
+  };
 
   const [form, setForm] =
     useState({
@@ -52,9 +74,9 @@ export default function CreateEventPage() {
 
       availableSeats: 1,
 
-      startDate: "",
+      startDate: getLocalISOString(),
 
-      endDate: ""
+      endDate: getLocalISOString()
     });
 
   const [thumbnail, setThumbnail] =
@@ -126,6 +148,58 @@ export default function CreateEventPage() {
     return validationErrors.find((err) => err.path.includes(path))?.message;
   };
 
+  const [selectedProvince, setSelectedProvince] = useState<SelectOption | null>(null);
+
+  const [selectedCategory, setSelectedCategory] = useState<SelectOption | null>(null);
+
+  const { data: provinces, isLoading: loadingProv } = useQuery<SelectOption[]>({
+    queryKey: ["provinces"],
+    queryFn: async () => {
+      const res = await fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json");
+      const data = await res.json();
+      return data.map((p: any) => ({ value: p.id, label: p.name
+        .toLowerCase()
+        .split(' ')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+       }));
+    },
+  });
+
+  const { data: cities, isLoading: loadingCity } = useQuery<SelectOption[]>({
+    queryKey: ["cities", selectedProvince?.value],
+    queryFn: async () => {
+      const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${selectedProvince?.value}.json`);
+      const data = await res.json();
+      return data.map((c: any) => ({ value: c.name
+        .toLowerCase()
+        .split(' ')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ') 
+        , label: c.name
+        .toLowerCase()
+        .split(' ')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ') 
+       }));
+    },
+    enabled: !!selectedProvince?.value,
+  });
+
+  const { data: eventCategories, isLoading: loadingCat } = useQuery<SelectOption[]>({
+    queryKey: ["eventCategories"],
+    queryFn: async () => {
+      const res = await fetch("https://raw.githubusercontent.com/IrsyadHalimi/eventCategories/refs/heads/main/categories.json");
+      
+      const data = await res.json();
+      
+      return data.map((c: any) => ({
+        value: c.name || c.name, 
+        label: c.name
+      }));
+    },
+  });
+
   return (
     <Card>
       <CardContent
@@ -157,30 +231,52 @@ export default function CreateEventPage() {
           <p className="text-red-500 text-sm">{getFieldError("title")}</p>
         )}
 
-        <Input
-          placeholder="Category"
-          onChange={(e) =>
-            setForm({
-              ...form,
-              category:
-                e.target.value
-            })
-          }
-        />
-        {getFieldError("category") && (
-          <p className="text-red-500 text-sm">{getFieldError("category")}</p>
-        )}
+        <div className="space-y-2">
+          <Select
+            options={eventCategories || []}
+            isLoading={loadingCat}
+            placeholder="Choose category..."
+            isClearable
+            value={selectedCategory}
+            onChange={(opt) => {
+              const selected = opt as SelectOption | null;
+              setSelectedCategory(selected);
+              // Simpan ke form state
+              setForm({ ...form, category: selected?.label || "" });
+            }}
+            noOptionsMessage={() => loadingCat ? "Loading categories..." : "No categories found"}
+          />
+        </div>
 
-        <Input
-          placeholder="Location"
-          onChange={(e) =>
-            setForm({
-              ...form,
-              location:
-                e.target.value
-            })
-          }
+        <Select
+          options={provinces || []}
+          isLoading={loadingProv}
+          placeholder="Province..."
+          isClearable
+          onChange={(opt) => {
+            const selected = opt as SelectOption | null; 
+            setSelectedProvince(selected);
+            setForm({ ...form, location: selected?.label || "" });
+          }}
         />
+
+        {selectedProvince && (
+          <Select
+            options={cities || []}
+            isLoading={loadingCity}
+            placeholder="City..."
+            onChange={(opt) => {
+              const cityOpt = opt as SelectOption | null;
+              if (cityOpt) {
+                setForm({ 
+                  ...form, 
+                  location: `${cityOpt.label}, ${selectedProvince.label}` 
+                });
+              }
+            }}
+          />
+        )}
+          
         {getFieldError("location") && (
           <p className="text-red-500 text-sm">{getFieldError("location")}</p>
         )}
@@ -233,32 +329,43 @@ export default function CreateEventPage() {
         {getFieldError("availableSeats") && (
           <p className="text-red-500 text-sm">{getFieldError("availableSeats")}</p>
         )}
-        <Input
-          type="datetime-local"
-          onChange={(e) =>
-            setForm({
-              ...form,
-              startDate:
-                e.target.value
-            })
-          }
-        />
-        {getFieldError("startDate") && (
-          <p className="text-red-500 text-sm">{getFieldError("startDate")}</p>
-        )}
-        <Input
-          type="datetime-local"
-          onChange={(e) =>
-            setForm({
-              ...form,
-              endDate:
-                e.target.value
-            })
-          }
-        />
-        {getFieldError("endDate") && (
-          <p className="text-red-500 text-sm">{getFieldError("endDate")}</p>
-        )}
+
+        
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Start</label>
+          <Input
+            type="datetime-local"
+            value={form.startDate}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                startDate:
+                  e.target.value
+              })
+            }
+          />
+          {getFieldError("startDate") && (
+            <p className="text-red-500 text-sm">{getFieldError("startDate")}</p>
+          )}
+        </div>
+        
+        <div className="space-y-2">
+          <label className="text-sm font-medium">End</label>
+          <Input
+            type="datetime-local"
+            value={form.endDate}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                endDate:
+                  e.target.value
+              })
+            }
+          />
+          {getFieldError("endDate") && (
+            <p className="text-red-500 text-sm">{getFieldError("endDate")}</p>
+          )}
+        </div>
 
         <Input
           type="file"

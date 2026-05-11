@@ -2,6 +2,8 @@ import {
   useQuery
 } from "@tanstack/react-query";
 
+import Select from "react-select";
+
 import {
   getEventsService
 } from "../services/event.service";
@@ -34,7 +36,32 @@ import {
   EmptyState
 } from "../components/common/empty-state";
 
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+
 export default function HomePage() {
+
+  const [selectedCategory, setSelectedCategory] = useState<SelectOption | null>(null);
+
+  const { data: eventCategories, isLoading: loadingCat } = 
+    useQuery<SelectOption[]>({
+      queryKey: ["eventCategories"],
+      queryFn: async () => {
+        const res = await fetch("https://raw.githubusercontent.com/IrsyadHalimi/eventCategories/refs/heads/main/categories.json");
+        
+        const data = await res.json();
+        
+        return data.map((c: any) => ({
+          value: c.name || c.name, 
+          label: c.name
+        }));
+      },
+    });
+
   const [search, setSearch] =
     useState("");
 
@@ -123,15 +150,21 @@ export default function HomePage() {
           }
         />
 
-        <Input
-          placeholder="Category"
-          value={category}
-          onChange={(e) =>
-            setCategory(
-              e.target.value
-            )
-          }
-        />
+        <div className="space-y-2">
+          <Select
+            options={eventCategories || []}
+            isLoading={loadingCat}
+            placeholder="Choose category..."
+            isClearable
+            value={selectedCategory}
+            onChange={(opt) => {
+              const selected = opt as SelectOption | null;
+              setSelectedCategory(selected);
+              setCategory(selected?.label || "");
+            }}
+            noOptionsMessage={() => loadingCat ? "Loading categories..." : "No categories found"}
+          />
+        </div>
 
         <Input
           placeholder="Location"

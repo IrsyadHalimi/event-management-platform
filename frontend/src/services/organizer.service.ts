@@ -15,6 +15,24 @@ export const createEventService =
   async (
     formData: FormData
   ) => {
+    const startDate = formData.get("startDate");
+    const endDate = formData.get("endDate");
+  
+    if (!startDate || isNaN(new Date(startDate as string).getTime())) {
+      formData.set("startDate", new Date().toISOString()); 
+    } else {
+      formData.set("startDate", new Date(startDate as string).toISOString());
+    }
+
+    if (!endDate || isNaN(new Date(endDate as string).getTime())) {
+      formData.set("endDate", new Date().toISOString());
+    } else {
+      formData.set("endDate", new Date(endDate as string).toISOString());
+    }
+
+    const price = formData.get("price") || "0";
+    formData.set("price", price);
+
     const response =
       await api.post(
         "/events",

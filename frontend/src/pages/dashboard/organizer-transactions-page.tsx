@@ -131,7 +131,7 @@ export default function OrganizerTransactionsPage() {
                     <p>
                       Total:
                       Rp{" "}
-                      {trx.totalPrice.toLocaleString()}
+                      {trx?.total?.toLocaleString()}
                     </p>
 
                     <div

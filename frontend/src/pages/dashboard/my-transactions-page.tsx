@@ -137,7 +137,7 @@ export default function MyTransactionsPage() {
                     >
                       {
                         trx.event
-                          .name
+                          .title
                       }
                     </h2>
 
@@ -151,7 +151,7 @@ export default function MyTransactionsPage() {
                     <p>
                       Total:
                       Rp{" "}
-                      {trx.totalPrice.toLocaleString()}
+                      {trx?.totalPrice?.toLocaleString() || 0}
                     </p>
 
                     <div

@@ -104,10 +104,10 @@ export default function EventDetailPage() {
         <img
           src={
             event.thumbnail
-              ? `http://localhost:5000/uploads/${event.thumbnail}`
+              ? `http://localhost:5000/uploads/events/${event.thumbnail}`
               : "https://placehold.co/1200x600"
           }
-          alt={event.name}
+          alt={event.title}
           className="
           w-full
           h-[400px]
@@ -124,7 +124,7 @@ export default function EventDetailPage() {
           mb-4
         "
         >
-          {event.name}
+          {event.title}
         </h1>
 
         <div
@@ -177,7 +177,7 @@ export default function EventDetailPage() {
               {event.price ===
               0
                 ? "FREE"
-                : `Rp ${event.price.toLocaleString()}`
+                : `Rp ${event?.price?.toLocaleString()}`
               }
             </h2>
 

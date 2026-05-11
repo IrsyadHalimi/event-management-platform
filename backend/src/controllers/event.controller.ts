@@ -21,6 +21,8 @@ import {
   findOrganizerEventsService
 } from "../services/event.service";
 
+import { deleteFile } from "../utils/file";
+
 export const createEvent =
   async (
     req: AuthRequest,
@@ -28,19 +30,31 @@ export const createEvent =
     next: NextFunction
   ) => {
     try {
+      const result = createEventSchema.safeParse(req.body);
+
+      if (!result.success) {
+        deleteFile(req.file?.path);
+        
+        return res.status(400).json({
+          success: false,
+          message: "Validation error",
+          errors: result.error.errors
+        });
+      }
+
       const validatedData =
         createEventSchema.parse(
           req.body
         );
 
-      let thumbnailPath = "";
+      let thumbnailName = "";
       if (req.file) {
-        thumbnailPath = req.file.path; 
+        thumbnailName = req.file?.filename;
       }
 
       const eventData = {
         ...validatedData,
-        thumbnail: thumbnailPath,
+        thumbnail: thumbnailName,
       };
 
       const event =
@@ -93,8 +107,8 @@ export const getEventDetail =
     next: NextFunction
   ) => {
     try {
-        
       const slug = req.params.slug; 
+      
       const event =
         await findEventBySlugService(
           slug as string
