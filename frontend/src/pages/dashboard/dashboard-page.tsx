@@ -149,30 +149,21 @@ export default function DashboardPage() {
           >
             Monthly Revenue
           </h2>
-
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
-            <BarChart
-              data={
-                revenue?.data ||
-                []
-              }
-            >
-              <XAxis
-                dataKey="label"
-              />
-
-              <YAxis />
-
-              <Tooltip />
-
-              <Bar
-                dataKey="revenue"
-              />
-            </BarChart>
-          </ResponsiveContainer>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={revenue?.data}> {/* Sesuaikan path ke array data */}
+                  <XAxis 
+                    dataKey="month"  // Harus sama persis dengan key di data (misal: "May")
+                  />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar 
+                    dataKey="total" // Harus sama persis dengan key angka/nominal Anda
+                    fill="#2563eb" 
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
         </CardContent>
       </Card>
     </div>

@@ -82,6 +82,7 @@ export default function MyTransactionsPage() {
         toast.success(
           "Transaction canceled"
         );
+        window.location.reload();
       },
 
       onError: (
