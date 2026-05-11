@@ -43,9 +43,20 @@ interface SelectOption {
   label: string;
 }
 
+import { useRef } from "react";
+
 export default function CreateEventPage() {
   const navigate =
     useNavigate();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleContainerClick = () => {
+    // Memaksa picker muncul saat area input diklik
+    if (inputRef.current) {
+      inputRef.current.showPicker();
+    }
+  };
 
   const getLocalISOString = () => {
     const now = new Date();
@@ -328,17 +339,22 @@ export default function CreateEventPage() {
         
         <div className="space-y-2">
           <label className="text-sm font-medium">Start</label>
-          <Input
-            type="datetime-local"
-            value={form.startDate}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                startDate:
-                  e.target.value
-              })
-            }
-          />
+          <div className="relative cursor-pointer" onClick={handleContainerClick}>
+            <Input
+              ref={inputRef}
+              type="datetime-local"
+              value={form.startDate}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  startDate: e.target.value
+                })
+              }
+              
+              className="cursor-pointer block [appearance:none] [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:left-0"
+            />
+          </div>
+          
           {getFieldError("startDate") && (
             <p className="text-red-500 text-sm">{getFieldError("startDate")}</p>
           )}
@@ -346,17 +362,21 @@ export default function CreateEventPage() {
         
         <div className="space-y-2">
           <label className="text-sm font-medium">End</label>
-          <Input
-            type="datetime-local"
-            value={form.endDate}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                endDate:
-                  e.target.value
-              })
-            }
-          />
+          <div className="relative cursor-pointer" onClick={handleContainerClick}>
+            <Input
+              ref={inputRef}
+              type="datetime-local"
+              value={form.endDate}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  endDate: e.target.value
+                })
+              }
+              
+              className="cursor-pointer block [appearance:none] [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:left-0"
+            />
+          </div>
           {getFieldError("endDate") && (
             <p className="text-red-500 text-sm">{getFieldError("endDate")}</p>
           )}

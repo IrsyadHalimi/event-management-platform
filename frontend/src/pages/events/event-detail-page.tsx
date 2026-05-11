@@ -35,6 +35,9 @@ import {
 import { toast }
   from "sonner";
 
+import dayjs
+  from "dayjs";
+
 export default function EventDetailPage() {
   const { slug } =
     useParams();
@@ -148,6 +151,40 @@ export default function EventDetailPage() {
             }{" "}
             seats
           </span>
+
+          <div className="flex items-center gap-1 
+              text-sm
+              text-gray-500">
+              📆{" "}
+            <span
+              className="
+            "
+            >
+              {dayjs(
+                event.startDate
+              ).format(
+                "DD MMM YYYY HH:mm"
+              )}
+            </span>
+            {event.startDate !== event.endDate && (
+              <>
+                {" "}
+              - 
+              <span
+                className="
+                text-sm
+                text-gray-500
+              "
+              >
+                {dayjs(
+                  event.endDate
+                ).format(
+                  "DD MMM YYYY HH:mm"
+                )}
+              </span>
+              </>
+            )}
+          </div>
         </div>
 
         <p
