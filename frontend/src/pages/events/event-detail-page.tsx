@@ -37,8 +37,15 @@ import { toast }
 
 import dayjs
   from "dayjs";
+import { Minus, Plus } from "lucide-react";
+
+import {
+  useAuthStore
+} from "../../store/auth.store";
 
 export default function EventDetailPage() {
+  const user = useAuthStore((state) => state.user);
+
   const { slug } =
     useParams();
 
@@ -215,36 +222,58 @@ export default function EventDetailPage() {
               {event.price ===
               0
                 ? "FREE"
-                : `Rp ${event?.price?.toLocaleString()}`
+                : `${event?.price?.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0
+                  })} per ticket`
               }
             </h2>
 
-            <div
-              className="
-              mb-4
-            "
-            >
-              <label>
-                Quantity
+            {user?.role === "CUSTOMER" && (<>
+            <div className="flex justify-between mb-6 gap-2">
+              <label className="text-sm font-medium text-foreground my-auto">
+                Quantity:
               </label>
 
-              <Input
-                type="number"
-                value={
-                  quantity
-                }
-                min={1}
-                onChange={(
-                  e
-                ) =>
-                  setQuantity(
-                    Number(
-                      e.target
-                        .value
-                    )
-                  )
-                }
-              />
+              <div className="flex items-center w-fit min-w-[120px] h-9 border rounded-md bg-background overflow-hidden">
+                {/* 1. Tombol Minus */}
+                <Button
+                  type="button"
+                  variant="default"
+                  size="icon"
+                  className="h-full w-9 rounded-none hover:bg-muted shrink-0 text-muted-foreground disabled:opacity-30"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  disabled={quantity <= 1} // Tombol mati jika qty sudah angka 1
+                >
+                  <Minus className="h-4 w-4 red" />
+                </Button>
+
+                {/* 2. Input Angka Tengah (Menghilangkan panah spin bawaan browser) */}
+                <Input
+                  type="number"
+                  value={quantity}
+                  min={1}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    // Memastikan jika user mengetik manual, nilainya tidak boleh di bawah 1
+                    setQuantity(val < 1 ? 1 : val);
+                  }}
+                  className="h-full w-12 rounded-none border-0 p-0 text-center text-sm font-medium focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+
+                {/* 3. Tombol Plus */}
+                <Button
+                  type="button"
+                  variant="default"
+                  size="icon"
+                  className="h-full w-9 rounded-none hover:bg-muted shrink-0 text-muted-foreground"
+                  onClick={() => setQuantity(quantity + 1)}
+                  disabled={quantity >= event.availableSeats} // Tombol mati jika qty sudah mencapai available seats
+                >
+                  <Plus className="h-4 w-4 purple" />
+                </Button>
+              </div>
             </div>
 
             <Button
@@ -269,6 +298,8 @@ export default function EventDetailPage() {
                 ? "Processing..."
                 : "Buy Ticket"}
             </Button>
+            </>
+            )}
           </CardContent>
         </Card>
       </div>

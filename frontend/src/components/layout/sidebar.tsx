@@ -39,7 +39,6 @@ export const Sidebar = () => {
       <div className="text-xl font-bold mb-6">Dashboard</div>
 
       <div className="flex flex-col gap-4">
-        <SidebarLink to="/dashboard" label="Overview" />
 
         {isRehydrating ? (
           <div className="space-y-4 px-3">
@@ -51,6 +50,7 @@ export const Sidebar = () => {
           <>
             {user?.role === "ORGANIZER" && (
               <>
+                <SidebarLink to="/dashboard" label="Overview" />
                 <SidebarLink to="/dashboard/my-events" label="My Events" />
                 <SidebarLink to="/dashboard/create-event" label="Create Event" />
                 <SidebarLink to="/dashboard/organizer-transactions" label="Transactions" />

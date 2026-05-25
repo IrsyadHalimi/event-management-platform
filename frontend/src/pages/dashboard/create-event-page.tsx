@@ -38,6 +38,8 @@ import {
 
 import { useQuery } from "@tanstack/react-query";
 
+import { ImageUploadPreview } from "@/components/ui/image-upload-preview";
+
 interface SelectOption {
   value: string;
   label: string;
@@ -382,16 +384,12 @@ export default function CreateEventPage() {
           )}
         </div>
 
-        <Input
-          type="file"
-          onChange={(e) =>
-            setThumbnail(
-              e.target
-                .files?.[0] ||
-                null
-            )
-          }
+        <ImageUploadPreview 
+          value={thumbnail} 
+          onChange={setThumbnail} 
+          placeholder="Maksimal ukuran file 2MB (Format: JPG, PNG)"
         />
+        
         {getFieldError("thumbnail") && (
           <p className="text-red-500 text-sm">{getFieldError("thumbnail")}</p>
         )}

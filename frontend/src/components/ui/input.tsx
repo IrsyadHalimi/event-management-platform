@@ -8,10 +8,29 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       <input
         type={type}
         data-slot="input"
-        // 2. Attach the ref here
         ref={ref} 
         className={cn(
-          "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+          // Layout & Size (Disamakan dengan standard height react-select ~38px)
+          "h-[38px] w-full min-w-0 rounded-md border bg-background px-3 py-2 text-sm transition-all outline-none",
+          
+          // Warna Border & Background saat Idle (React-select menggunakan warna border yang sedikit abu-abu netral)
+          "border-muted-foreground/30 text-foreground placeholder:text-muted-foreground/60",
+          
+          // State: FOCUS (Ini kunci agar mirip dengan focus biru/primary khas react-select)
+          "focus:border-primary focus:ring-1 focus:ring-primary",
+          
+          // State: HOVER (React-select agak menggelap bordernya saat di-hover)
+          "hover:border-muted-foreground/50",
+          
+          // State: DISABLED
+          "disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-muted/40 disabled:opacity-60",
+          
+          // State: INVALID / ERROR
+          "aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive",
+          
+          // File input reset (jika digunakan untuk file)
+          "file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium",
+          
           className
         )}
         {...props}

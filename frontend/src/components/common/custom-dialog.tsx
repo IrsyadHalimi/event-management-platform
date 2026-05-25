@@ -17,20 +17,25 @@ import {
 interface Props {
   onConfirm:
     () => void;
+  open: boolean;                             // Tambahan untuk kontrol state
+  onOpenChange: (open: boolean) => void;
 
   loading?: boolean;
 
   title?: string;
 
   description?: string;
+
+  variant?: "default" | "outline" | "secondary" | "destructive";
 }
 
-export const DeleteDialog =
+export const CustomDialog =
   ({
     onConfirm,
     loading,
     title,
-    description
+    description,
+    variant = "default"
   }: Props) => {
     return (
       <AlertDialog>
@@ -38,7 +43,7 @@ export const DeleteDialog =
           asChild
         >
           <Button
-            variant="secondary"
+            variant={variant}
             className="
             w-full
             mt-2

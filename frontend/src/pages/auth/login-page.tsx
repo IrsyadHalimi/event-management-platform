@@ -72,7 +72,10 @@ export default function LoginPage() {
       setAuth(result.token, result.user);
 
       toast.success("Login success");
-      navigate("/dashboard");
+
+      const urlParams = result?.user?.role === "ORGANIZER" ? "/dashboard" : "/dashboard/my-transactions";
+      
+      navigate(urlParams);
     } catch (error: any) {
       toast.error(
         error.response?.data?.message || "Login failed"

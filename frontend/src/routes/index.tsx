@@ -121,7 +121,13 @@ export const AppRoutes =
           <Route
             index
             element={
-              <DashboardPage />
+              <RoleRoute
+                allowedRoles={[
+                  "ORGANIZER"
+                ]}
+              >
+                <DashboardPage />
+              </RoleRoute>
             }
           />
 

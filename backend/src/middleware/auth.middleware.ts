@@ -44,10 +44,6 @@ export const authMiddleware = (
       role: decoded.role,
     };
 
-    // DEBUG: Cek apa yang dibaca middleware dari token
-    console.log("=== AUTH MIDDLEWARE DEBUG ===");
-    console.log("Decoded Role from Token:", decoded.role);
-
     next();
   } catch (error) {
     return res.status(401).json({

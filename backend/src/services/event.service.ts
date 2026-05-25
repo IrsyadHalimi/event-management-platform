@@ -5,7 +5,8 @@ import {
   findEventByIdRepo,
   updateEventRepo,
   deleteEventRepo,
-  findOrganizerEventsRepo
+  findOrganizerEventsRepo,
+  getHeroEvents
 } from "../repositories/event.repository";
 
 import { generateSlug }
@@ -156,4 +157,9 @@ export const findOrganizerEventsService =
     return findOrganizerEventsRepo(
       organizerId
     );
+  };
+
+export const getHeroEventsService =
+  async () => {
+    return getHeroEvents();
   };

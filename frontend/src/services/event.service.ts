@@ -59,3 +59,13 @@ export const updateEventService =
 
     return response.data;
   };
+
+export const getHeroEventsService =
+  async () => {
+    const response =
+      await api.get(
+        "/events/hero/latest"
+      );
+
+    return response.data;
+  };

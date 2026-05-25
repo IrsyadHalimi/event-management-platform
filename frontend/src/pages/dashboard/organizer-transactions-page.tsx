@@ -29,7 +29,16 @@ import {
   EmptyState
 } from "../../components/common/empty-state";
 
+import { useState } from "react";
+import { CustomDialog } from "@/components/common/custom-dialog";
+
 export default function OrganizerTransactionsPage() {
+  // State untuk mengontrol dialog Accept
+  const [isAcceptDialogOpen, setIsAcceptDialogOpen] = useState(false);
+
+  // State untuk mengontrol dialog Reject
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+
   const { data, refetch } =
     useQuery({
       queryKey: [
@@ -115,30 +124,38 @@ export default function OrganizerTransactionsPage() {
                     >
                       {
                         trx.event
-                          .name
+                          .title
                       }
                     </h2>
+                    
+                    <div className="flex flex-col md:flex-row gap-1 md:gap-8 mt-2">
+                      <p>
+                        Customer:
+                        {" "}
+                        {
+                          trx.user
+                            .name
+                        }
+                      </p>
 
-                    <p>
-                      Customer:
-                      {" "}
-                      {
-                        trx.user
-                          .name
-                      }
-                    </p>
+                      <p>
+                        Quantity:
+                        {" "}
+                        {
+                          trx.quantity
+                        }
+                      </p>
 
-                    <p>
-                      Total:
-                      Rp{" "}
-                      {trx?.total?.toLocaleString()}
-                    </p>
-
-                    <div
-                      className="
-                      mt-2
-                    "
-                    >
+                      <p>
+                        Total:
+                        {" "}
+                        {trx?.total?.toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0
+                        }) || 0}
+                      </p>
+                      
                       <StatusBadge
                         status={
                           trx.status
@@ -148,6 +165,18 @@ export default function OrganizerTransactionsPage() {
                   </div>
 
                   {trx.paymentProof && (
+                    <>
+                    <label
+                      className="
+                      block
+                      text-sm
+                      font-medium
+                      text-gray-900
+                      "
+                    >
+                      Payment Proof
+                    </label>
+                  
                     <img
                       src={`http://localhost:5000/uploads/payment-proofs/${trx.paymentProof}`}
                       alt="proof"
@@ -156,36 +185,42 @@ export default function OrganizerTransactionsPage() {
                       rounded-lg
                     "
                     />
+                    </>
                   )}
 
                   {trx.status ===
                     "WAITING_FOR_ADMIN_CONFIRMATION" && (
                     <div
                       className="
-                      flex
+                      grid
+                      grid-cols-2
                       gap-3
                     "
                     >
-                      <Button
-                        onClick={() =>
-                          acceptMutation.mutate(
-                            trx.id
-                          )
-                        }
-                      >
-                        Accept
-                      </Button>
+                      
+                      <CustomDialog
+                        open={isAcceptDialogOpen}
+                        onOpenChange={setIsAcceptDialogOpen}
+                        onConfirm={() => {
+                          acceptMutation.mutate(trx.id);
+                          setIsAcceptDialogOpen(false); // Otomatis tutup setelah konfirmasi
+                        }}
+                        loading={acceptMutation.isPending}
+                        title="Accept"
+                        description="Apakah Anda yakin ingin menyetujui transaksi ini? Tindakan ini akan mengubah status transaksi menjadi berhasil."
+                      />
 
-                      <Button
-                        variant="destructive"
-                        onClick={() =>
-                          rejectMutation.mutate(
-                            trx.id
-                          )
-                        }
-                      >
-                        Reject
-                      </Button>
+                      <CustomDialog
+                        open={isRejectDialogOpen}
+                        onOpenChange={setIsRejectDialogOpen}
+                        onConfirm={() => {
+                          rejectMutation.mutate(trx.id);
+                          setIsRejectDialogOpen(false); // Otomatis tutup setelah konfirmasi
+                        }}
+                        loading={rejectMutation.isPending}
+                        title="Reject"
+                        description="Apakah Anda yakin ingin menolak transaksi ini? Pengguna akan menerima notifikasi bahwa transaksi mereka ditolak."
+                      />
                     </div>
                   )}
                 </CardContent>

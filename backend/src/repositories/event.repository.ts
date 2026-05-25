@@ -105,3 +105,22 @@ export const findOrganizerEventsRepo =
       }
     });
   };
+
+export const getHeroEvents =
+  async () => {
+    return prisma.event.findMany({
+      take: 3,
+
+      orderBy: {
+        createdAt: "desc"
+      },
+
+      select: {
+        id: true,
+
+        title: true,
+
+        thumbnail: true
+      }
+    });
+  };

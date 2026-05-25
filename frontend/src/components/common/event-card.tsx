@@ -108,12 +108,10 @@ export const EventCard =
             "
             >
               {event.price === 0 ? (
+                <Badge variant="destructive">
+                  FREE
+                </Badge>
                 
-                <img
-                  src="/public/free-label.png"
-                  alt="Free Event"
-                  className="h-6"
-                />
               ) : (
                 <span
                   className="

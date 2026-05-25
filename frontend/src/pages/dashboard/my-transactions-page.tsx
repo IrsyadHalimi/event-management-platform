@@ -3,6 +3,8 @@ import {
   useMutation
 } from "@tanstack/react-query";
 
+import { useState, useRef } from "react";
+
 import {
   getMyTransactionsService,
   uploadPaymentProofService
@@ -29,14 +31,21 @@ import { toast }
   from "sonner";
 
 import {
-  DeleteDialog
-} from "../../components/common/delete-dialog";
+  CustomDialog
+} from "../../components/common/custom-dialog";
 
 import {
   cancelTransactionService
 } from "../../services/transaction.service";
+import { Input } from "@/components/ui/input";
+
 
 export default function MyTransactionsPage() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedFileEvent, setSelectedFileEvent] = useState<React.ChangeEvent<HTMLInputElement> | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const { data } =
     useQuery({
       queryKey: [
@@ -66,10 +75,9 @@ export default function MyTransactionsPage() {
         window.location.reload();
       },
 
-      onError: () => {
-        toast.error(
-          "Upload failed"
-        );
+      onError: (error: any) => {
+        const serverMessage = error.response?.data?.message;
+        toast.error(serverMessage || "Gagal mengunggah file karena terlalu besar.");
       }
     });
 
@@ -118,6 +126,46 @@ export default function MyTransactionsPage() {
       });
     };
 
+  // Fungsi 1: Menangkap perubahan file
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validasi ukuran file (seperti solusi sebelumnya)
+    const MAX_FILE_SIZE = 2 * 1024 * 1024; 
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("Ukuran file terlalu besar! Maksimal 2 MB.");
+      e.target.value = ""; 
+      return;
+    }
+
+    // Simpan data event file ke state sementara, lalu munculkan dialog konfirmasi
+    setSelectedFileEvent(e);
+    setIsDialogOpen(true);
+  };
+
+  // Fungsi 2: Dieksekusi jika menekan "Continue" di Dialog
+  const handleConfirmUpload = (id: string) => {
+    if (!selectedFileEvent) return;
+
+    // Panggil fungsi handleUpload asli milik Anda
+    handleUpload(selectedFileEvent, id);
+    
+    // Tutup dialog dan bersihkan state penampung
+    setIsDialogOpen(false);
+    setSelectedFileEvent(null);
+  };
+
+  // Fungsi 3: Jika user menekan batal ("Cancel")
+  const handleCancelDialog = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) {
+      // Bersihkan input file agar user bisa memilih ulang file yang sama jika ingin mencoba lagi
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      setSelectedFileEvent(null);
+    }
+  };
+
   return (
     <div>
       <h1
@@ -153,9 +201,6 @@ export default function MyTransactionsPage() {
                   p-6
                   flex
                   flex-col
-                  md:flex-row
-                  md:items-center
-                  md:justify-between
                   gap-4
                 "
                 >
@@ -172,63 +217,75 @@ export default function MyTransactionsPage() {
                       }
                     </h2>
 
-                    <p>
-                      Qty:{" "}
-                      {
-                        trx.quantity
-                      }
-                    </p>
+                    <div className="flex flex-col md:flex-row gap-1 md:gap-8 mt-2">
+                      <p>
+                        Qty:{" "}
+                        {
+                          trx.quantity
+                        }
+                      </p>
 
-                    <p>
-                      Total:
-                      Rp{" "}
-                      {trx?.totalPrice?.toLocaleString() || 0}
-                    </p>
+                      <p>
+                        Total:
+                        {" "}
+                        {trx?.total?.toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0
+                        }) || 0}
+                      </p>
 
-                    <div
-                      className="
-                      mt-2
-                    "
-                    >
                       <StatusBadge
                         status={
                           trx.status
                         }
                       />
-                    </div>
 
-                    {trx.status ===
+                      {trx.status ===
                       "WAITING_FOR_PAYMENT" && (
-                      <div
-                        className="
-                        mt-2
-                        text-red-500
-                      "
-                      >
-                        <Countdown
-                          expiredAt={
-                            trx.expiredAt
-                          }
-                        />
-                      </div>
-                    )}
+                        <div
+                          className="
+                          text-red-500
+                        "
+                        >
+                          <Countdown
+                            expiredAt={
+                              trx.expiredAt
+                            }
+                          />
+                        </div>
+                      )}
+                    </div>
+                    
                   </div>
 
                   {trx.status ===
                     "WAITING_FOR_PAYMENT" && (
                     <div>
-                      <input
+                      <label
+                        htmlFor={`file-input-${trx.id}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Upload Payment Proof
+                      </label>
+                      <Input
                         type="file"
-                        onChange={(
-                          e
-                        ) =>
-                          handleUpload(
-                            e,
-                            trx.id
-                          )
-                        }
+                        placeholder="Price"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        accept="image/*"
+                        className="block w-full text-sm"
                       />
-                      <DeleteDialog
+                      {fileInputRef.current?.value && (<CustomDialog
+                        open={isDialogOpen}
+                        onOpenChange={handleCancelDialog}
+                        onConfirm={() => handleConfirmUpload(trx.id)} // pastikan id transaksi yang benar diteruskan
+                        loading={mutation.isPending} // ambil dari state status react-query Anda
+                        title="Upload?"
+                        description="Pastikan gambar bukti transfer Anda sudah benar dan terbaca jelas sebelum melanjutkan."
+                      />)}
+                      
+                      <CustomDialog
                         title="Cancel Transaction"
                         description="This transaction will be canceled."
                         onConfirm={() =>
@@ -239,6 +296,8 @@ export default function MyTransactionsPage() {
                         loading={
                           cancelMutation.isPending
                         }
+                        open={false}
+                        onOpenChange={() => {}}
                       />
                     </div>
                   )}

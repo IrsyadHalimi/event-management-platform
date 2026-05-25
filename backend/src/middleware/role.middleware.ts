@@ -17,7 +17,7 @@ export const roleMiddleware = (
     res: Response,
     next: NextFunction
   ) => {
-    console.log('TESTTTT', req.user);
+    
     if (!req.user) {
       return res.status(401).json({
         success: false,

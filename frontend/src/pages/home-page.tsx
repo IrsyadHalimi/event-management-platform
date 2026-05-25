@@ -4,6 +4,8 @@ import {
 
 import Select from "react-select";
 
+import { CustomSelect } from "../components/ui/custom-select";
+
 import {
   getEventsService
 } from "../services/event.service";
@@ -36,6 +38,13 @@ import {
   EmptyState
 } from "../components/common/empty-state";
 
+import {
+  Event
+} from "../types/event.type";
+
+import HeroCarousel
+  from "../components/common/hero-carousel";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface SelectOption {
   value: string;
@@ -109,14 +118,17 @@ export default function HomePage() {
     <div>
       <div
         className="
-        mb-8
+        mb-2
       "
       >
+  
+        <HeroCarousel />
         <h1
           className="
           text-4xl
           font-bold
           mb-2
+          purple
         "
         >
           Discover Events
@@ -151,12 +163,9 @@ export default function HomePage() {
         />
 
         <div className="space-y-2">
-          <Select
+          <CustomSelect 
             options={eventCategories || []}
-            isLoading={loadingCat}
             placeholder="Choose category..."
-            isClearable
-            value={selectedCategory}
             onChange={(opt) => {
               const selected = opt as SelectOption | null;
               setSelectedCategory(selected);
@@ -205,6 +214,7 @@ export default function HomePage() {
             className="
             text-2xl
             font-bold
+            purple
           "
           >
             No Events Found
@@ -236,7 +246,7 @@ export default function HomePage() {
               "
               >
               {data?.data?.map(
-                (event: any) => (
+                (event: Event) => (
                   <EventCard
                     key={
                       event.id
@@ -248,37 +258,29 @@ export default function HomePage() {
             </div>
           )}
 
-          <div
-            className="
-            flex
-            justify-center
-            gap-4
-            mt-10
-          "
-          >
+          <div className="flex justify-center gap-4 mt-10">
+            {/* Tombol Panah Kiri (Previous) */}
             <Button
-              disabled={
-                page === 1
-              }
-              onClick={() =>
-                setPage(
-                  (prev) =>
-                    prev - 1
-                )
-              }
+              variant="default"
+              title="Previous"
+              size="icon"
+              disabled={page === 1}
+              onClick={() => setPage((prev) => prev - 1)}
+              aria-label="Previous page" // Bagus untuk aksesibilitas (screen reader)
             >
-              Previous
+              <ChevronLeft className="h-4 w-4 purple" />
             </Button>
 
+            {/* Tombol Panah Kanan (Next) */}
             <Button
-              onClick={() =>
-                setPage(
-                  (prev) =>
-                    prev + 1
-                )
-              }
+              variant="default"
+              title="Next"
+              size="icon"
+              disabled={page === data?.meta?.totalPages}
+              onClick={() => setPage((prev) => prev + 1)}
+              aria-label="Next page" // Bagus untuk aksesibilitas (screen reader)
             >
-              Next
+              <ChevronRight className="h-4 w-4 purple" />
             </Button>
           </div>
         </>

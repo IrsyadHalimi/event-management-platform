@@ -32,8 +32,11 @@ export const updateEventSchema =
     location:
       z.string().optional(),
 
-    price: z.coerce.number(),
-    availableSeats: z.coerce.number(),
+    price:
+      z.number().optional(),
+
+    availableSeats:
+      z.number().optional(),
 
     startDate:
       z.string().optional(),

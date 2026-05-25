@@ -10,12 +10,20 @@ import {
   useAuthStore
 } from "../../store/auth.store";
 
+import {
+  LogIn,
+  LogOut,
+  Ticket,
+  UserRoundPlus
+} from "lucide-react";
+
 export const Navbar =
   () => {
     const {
       token,
       logout
     } = useAuthStore();
+    const user = useAuthStore((state) => state.user);
 
     return (
       <nav
@@ -41,18 +49,12 @@ export const Navbar =
               to="/"
               className="
                 font-bold
-                text-xl
+                text-4xl
                 flex items-center gap-2
+                purple
               "
             >
-            <img
-              src="/ticket.svg"
-              alt="Eventify Logo"
-              className="
-                h-8
-                w-auto
-              "
-            />
+            <Ticket size={48} />
               Eventify
             </Link>
           </div>
@@ -67,9 +69,19 @@ export const Navbar =
 
             {token ? (
               <>
-                <Link to="/dashboard">
-                  Dashboard
-                </Link>
+                {user?.role === "ORGANIZER" ? (
+                  <Link
+                    to="/dashboard"
+                  >
+                    Dashboard
+                  </Link>
+                ) : (
+                  <Link
+                    to="/dashboard/my-transactions"
+                  >
+                    My Transactions
+                  </Link>
+                )}
 
                 <Button
                   variant="destructive"
@@ -78,20 +90,36 @@ export const Navbar =
                     window.location.href =
                       "/login";
                   }}
+                  title="Logout"
+                  aria-label="Logout"
                 >
-                  Logout
+                  <LogOut />
                 </Button>
               </>
             ) : (
               <>
-                <Link to="/login">
+                <Link to="/login" title="Login" aria-label="Login">
+                <Button
+                  variant="default"
+                  title="Login"
+                  aria-label="Login"
+                >
                   Login
+                  <LogIn />
+                </Button>
                 </Link>
 
                 <Link
                   to="/register"
                 >
-                  Register
+                  <Button
+                    variant="default"
+                    title="Register"
+                    aria-label="Register"
+                  >
+                    Register
+                  <UserRoundPlus />
+                </Button>
                 </Link>
               </>
             )}

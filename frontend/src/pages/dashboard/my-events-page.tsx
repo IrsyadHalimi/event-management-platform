@@ -20,8 +20,8 @@ import { toast }
   from "sonner";
 
 import {
-  DeleteDialog
-} from "../../components/common/delete-dialog";
+  CustomDialog
+} from "../../components/common/custom-dialog";
 
 import {
   EmptyState
@@ -100,36 +100,44 @@ export default function MyEventsPage() {
             (event: any) => (
               <div
                 key={event.id}
+                className="flex flex-col gap-2 border p-2 rounded-2xl"
               >
+                
+                <div>
+                  <Link
+                    to={`/dashboard/edit-event/${event.id}`}
+                  >
+                    <Button
+                      className="
+                      w-full
+                      mt-2
+                    "
+                    >
+                      Edit
+                    </Button>
+                  </Link>
+
+                  <CustomDialog
+                    onConfirm={() =>
+                      mutation.mutate(
+                        event.id
+                      )
+                    }
+                    loading={
+                      mutation.isPending
+                    }
+                    title="Delete Event"
+                    description="This event will be permanently deleted."
+                    variant="destructive"
+                    open={false}
+                    onOpenChange={() => {}}
+                  />
+                </div>
+                
                 <EventCard
                   event={event}
                 />
 
-                <Link
-                  to={`/dashboard/edit-event/${event.id}`}
-                >
-                  <Button
-                    className="
-                    w-full
-                    mt-2
-                  "
-                  >
-                    Edit
-                  </Button>
-                </Link>
-
-                <DeleteDialog
-                  onConfirm={() =>
-                    mutation.mutate(
-                      event.id
-                    )
-                  }
-                  loading={
-                    mutation.isPending
-                  }
-                  title="Delete Event"
-                  description="This event will be permanently deleted."
-                />
               </div>
             )
           )}

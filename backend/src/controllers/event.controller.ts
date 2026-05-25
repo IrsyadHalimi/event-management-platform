@@ -18,7 +18,8 @@ import {
   findEventBySlugService,
   updateEventService,
   deleteEventService,
-  findOrganizerEventsService
+  findOrganizerEventsService,
+  getHeroEventsService
 } from "../services/event.service";
 
 import { deleteFile } from "../utils/file";
@@ -130,6 +131,16 @@ export const updateEvent =
     next: NextFunction
   ) => {
     try {
+      const result = updateEventSchema.safeParse(req.body);
+
+      if (!result.success) {
+        return res.status(400).json({
+          success: false,
+          message: "Validation error",
+          errors: result.error.errors
+        });
+      }
+      
       const validatedData =
         updateEventSchema.parse(
           req.body
@@ -196,5 +207,26 @@ export const getOrganizerEvents =
       });
     } catch (error) {
       next(error);
+    }
+  };
+
+export const getHeroEvents =
+  async (
+    req: AuthRequest,
+    res: Response
+  ) => {
+    try {
+      const events =
+        await getHeroEventsService();
+
+      return res.json({
+        success: true,
+        data: events
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message:
+          "Failed to get hero events"
+      });
     }
   };

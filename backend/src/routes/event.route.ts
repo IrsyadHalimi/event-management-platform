@@ -6,7 +6,8 @@ import {
   getEventDetail,
   updateEvent,
   deleteEvent,
-  getOrganizerEvents
+  getOrganizerEvents,
+  getHeroEvents
 } from "../controllers/event.controller";
 
 import {
@@ -22,6 +23,11 @@ import { upload } from "../config/multer";
 const router = Router();
 
 router.get("/", getEvents);
+
+router.get(
+  "/hero/latest",
+  getHeroEvents
+);
 
 router.get(
   "/my-events",
@@ -52,13 +58,15 @@ router.post(
   createEvent
 );
 
-router.put(
+router.patch(
   "/:id",
   authMiddleware,
 
   roleMiddleware([
     "ORGANIZER"
   ]),
+
+  upload.none(),
 
   updateEvent
 );
